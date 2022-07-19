@@ -11,7 +11,7 @@ Crypto reporting for businesses can be challenging because cryptocurrency is dec
 Another challenge is the lack of regulation around cryptocurrency. It can make it difficult for enterprises to comply with tax laws properly. As the industry evolves, there will likely be more clarity around these issues, but for now, enterprises need to be extra careful to ensure they are staying compliant.
 
 ## What Is The Difference Between Consumer And Enterprise Accounting?
-There are a few key differences between consumer and enterprise accounting regarding cryptocurrency. Enterprises need to be more careful about accurately tracking their transactions and balances and valuing their assets. They also need to be aware of the tax implications of their activities.
+There are a few key differences between consumer and [enterprise cryptocurrency accounting](https://tres.finance). Enterprises need to be more careful about accurately tracking their transactions and balances and valuing their assets. They also need to be aware of the tax implications of their activities.
 
 Additionally, enterprises should be able to account for cryptocurrency consistently. It means having policies and procedures in place to track purchases, sales, transfers, and storage of digital assets.
 They may be subject to more regulations and taxes than consumers. Cryptocurrency risks, such as price volatility and hacking, should also be considered by enterprises.
