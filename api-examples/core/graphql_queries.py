@@ -186,10 +186,10 @@ mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timest
 SUB_TRANSACTIONS_DATA_QUERY = """
 query GetSubTxs(
     $limit: Int, $offset: Int, $belongsTo_Identifier_In: [String], $tx_Timestamp_Gt: DateTime, $tags_Overlap: [String],
-    $sender_Identifier_In: [String], $platform_In: [String], $tx_Classification_Activity_In: [String]
+    $sender_Identifier_In: [String], $platform_In: [String], $tx_Classification_Activity_In: [String], $recipient_Identifier_In: [String]
 ) {
  subTransaction(
-    limit: $limit, offset: $offset, belongsTo_Identifier_In: $belongsTo_Identifier_In,
+    limit: $limit, offset: $offset, belongsTo_Identifier_In: $belongsTo_Identifier_In, recipient_Identifier_In: $recipient_Identifier_In,
     tx_Timestamp_Gt: $tx_Timestamp_Gt, tags_Overlap: $tags_Overlap, sender_Identifier_In: $sender_Identifier_In,
     platform_In: $platform_In, tx_Classification_Activity_In: $tx_Classification_Activity_In) {
    totalCount
@@ -212,6 +212,7 @@ query GetSubTxs(
      }
      tx {
         identifier
+        blockNumber
         classification {
             action
             activity

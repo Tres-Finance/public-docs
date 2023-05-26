@@ -3,6 +3,7 @@ from .graphqlclient import GraphQLClient
 from .graphql_queries import *
 import logging
 from datetime import datetime
+from .models.stateless_response import StatelessPosition
 
 def get_graphql_client(
     client_id: str,
@@ -167,6 +168,7 @@ def get_sub_transactions_data_in_account_context(
     tags: list[str] = None,
     identifiers: list[str] = None,
     senders: list[str] = None,
+    recipients: list[str] = None,
     platforms: list[str] = None,
     offset: int = 0,
     limit: int = 100
@@ -180,6 +182,7 @@ def get_sub_transactions_data_in_account_context(
         tags_Overlap=tags if tags else None,
         belongsTo_Identifier_In=identifiers if identifiers else None,
         sender_Identifier_In=senders if senders else None,
+        recipient_Identifier_In=recipients if recipients else None,
         platform_In=platforms if platforms else None
     )
     response = execute_grahpql_query(
@@ -193,13 +196,15 @@ def get_stateless_positions(
     wallet_identifiers: list[str],
     platform: str,
     application: str = None,
-):
+    timestamp: datetime = None
+) -> list[StatelessPosition]:
     variables = dict(
         walletIdentifiers=wallet_identifiers,
         platform=platform,
-        application=application
+        application=application,
+        timestamp=timestamp.isoformat() if timestamp else None
     )
     response = execute_grahpql_query(
         graphql_client, GET_STATELESS_POSITIONS_MUTATION, variables
     )["data"]["getStatelessWalletsPositions"]["results"]
-    return response
+    return [StatelessPosition.parse_obj(position) for position in response]

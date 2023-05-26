@@ -1,50 +1,35 @@
-from dataclasses import dataclass, field
-from dataclasses_json import dataclass_json, LetterCase
+from pydantic import BaseModel
 from datetime import datetime
-from dataclasses_json import config
-from dateutil.parser import parse
-from pytz import UTC
 from typing import Optional
+from enum import StrEnum
 
-class StringSerializer:
-    @staticmethod
-    def decode(date_string: Optional[str]) -> Optional[datetime]:
-        return parse(date_string) if date_string else None
+from pydantic import BaseModel
+from humps import camelize
 
-    @staticmethod
-    def encode(date: Optional[datetime], str_format: str) -> Optional[str]:
-        return date.strftime(str_format) if date else None
+def to_camel(string):
+    return camelize(string)
 
 
-class ISOSerializer(StringSerializer):
-    @staticmethod
-    def encode(date: Optional[datetime], str_format='') -> Optional[str]:
-        return datetime.isoformat(date) if date else None
+class CamelModel(BaseModel):
+    class Config:
+        alias_generator = to_camel
+        allow_population_by_field_name = True
 
-iso_datetime_config = config(decoder=ISOSerializer.decode, encoder=ISOSerializer.encode)
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class FiatValue:
+class FiatValue(CamelModel):
     value: float
     fiat_currency: str
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class InternalAccount:
+class InternalAccount(CamelModel):
     identifier: str
     name: Optional[str] = None
     tags: Optional[list[str]] = None
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class Account:
+class Account(CamelModel):
     identifier: str
     platform: Optional[str] = None
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class Asset:
+class Asset(CamelModel):
     symbol: str
     name: str
     platform: Optional[str] = None

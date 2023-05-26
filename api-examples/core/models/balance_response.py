@@ -1,10 +1,6 @@
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json, LetterCase
 from .basic import *
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class Balance:
+class Balance(CamelModel):
     name: str
     id: str
     created_at: str
@@ -16,15 +12,12 @@ class Balance:
     block_height: int
     status: str
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class BalanceResponse:
+
+class BalanceResponse(CamelModel):
     total_count: int
     results : list[Balance]
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class BalanceOutput:
+class BalanceOutput(CamelModel):
     blockchain: str
     validator_address: str
     timestamp: str

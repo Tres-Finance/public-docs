@@ -1,46 +1,35 @@
 from dataclasses import dataclass, field
-from dataclasses_json import dataclass_json, LetterCase
 from datetime import datetime
 from .basic import *
+from .enums import *
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class Classification:
+class Classification(CamelModel):
     action: str
     activity: str
-
-
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class Transaction:
+class Transaction(CamelModel):
     identifier: str
     classification: Classification
-    timestamp: Optional[datetime] = field(metadata=iso_datetime_config, default=None)
+    timestamp: Optional[datetime]
     platform: Optional[str] = None
+    block_number: Optional[int] = None
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class SubTransaction:
+class SubTransaction(CamelModel):
     amount: float
     balance_factor: int
-    timestamp: datetime = field(metadata=iso_datetime_config)
+    timestamp: datetime
     type: str
     belongs_to: InternalAccount
     sender: Account
     recipient: Account
     asset: Asset
     tx: Transaction
-    platform: str
+    platform: Platform
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class SubTransactionResponse:
+class SubTransactionResponse(CamelModel):
     total_count: int
     results: list[SubTransaction]
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass
-class GeneratedRewardsReportOutput:
+class GeneratedRewardsReportOutput(CamelModel):
     blockchain: str
     address: str
     date: datetime

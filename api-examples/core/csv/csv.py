@@ -6,14 +6,14 @@ def create_csv(filer, headers: list[str]) -> csv.DictWriter:
     return writer
 
 def write_csv_row(writer: csv.DictWriter, data: dict):
-    writer.writerow(data.to_dict())
+    writer.writerow(data.dict())
 
-def write_csv_rows(writer: csv.DictWriter, data: list[dict]):
+def write_csv_rows(writer: csv.DictWriter, data: list):
     for item in data:
         write_csv_row(writer, item)
 
-def get_headers(data: dict) -> list[str]:
-    return list(data.to_dict().keys())
+def get_headers(data) -> list[str]:
+    return list(data.dict().keys())
 
 def write_output(output):
     with open("output.csv", "w") as filer:
