@@ -3,7 +3,7 @@ from data.stateless_demo import *
 from core.models import *
 from core.csv import *
 from datetime import datetime, timedelta
-POLYGON_POS_CONTRACTS = ["Polygon-PoS-Validator-144-Self-Stake"]
+POLYGON_POS_CONTRACTS = ["0x5e3ef299fddf15eaa0432e6e66473ace8c13d908"]
 POLYOGN_APPLICATION = "polygon-staking"
 
 def get_withdrawals(graphql_client, start_date: datetime, end_date: datetime, delegators: list[str], contracts: list[str]):
