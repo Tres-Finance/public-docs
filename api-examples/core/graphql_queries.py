@@ -71,7 +71,7 @@ ASSET_BALACE_QUERY = """query AssetBalanceQuery($includePending: Boolean, $limit
         amount   
         state
         status
-        blockHeight
+        blockNumber
         belongsTo {
             identifier
             name
@@ -167,7 +167,7 @@ mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timest
       results {
         walletIdentifier
         displayName
-        blockHeight
+        blockNumber
         platform
         positionType
         children {

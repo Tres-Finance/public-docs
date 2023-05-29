@@ -11,7 +11,7 @@ def parse_output(balances: list[Balance]):
                 blockchain=balance.asset.platform,
                 validator_address=balance.belongs_to.identifier,
                 timestamp=balance.created_at,
-                block_height=balance.block_height,
+                block_number=balance.block_number,
                 total_staked_native=balance.amount,
                 total_staked_fiat=balance.fiat_value.value,
                 status=balance.status

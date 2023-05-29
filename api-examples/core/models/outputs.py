@@ -8,7 +8,7 @@ class StakingPositionMonitoringOutput(BaseModel):
     position_name: str
     platform: Platform
     timestamp: datetime
-    block_height: Optional[int] = None
+    block_number: Optional[int] = None
     token_symbol: str
     token_amount: float
     state: BalanceState

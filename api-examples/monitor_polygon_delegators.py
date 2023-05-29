@@ -50,7 +50,7 @@ def parse_sbx_to_event(subtx: SubTransaction, state: BalanceState) -> StakingPos
         position_name=state,
         platform=subtx.platform,
         timestamp=subtx.timestamp,
-        block_height=subtx.tx.block_number,
+        block_number=subtx.tx.block_number,
         token_symbol=subtx.asset.symbol,
         token_amount=float(subtx.amount),
         state=state,
@@ -65,7 +65,7 @@ def parse_position_to_event(position: StatelessPosition, delegator: str, timesta
             position_name=position.display_name,
             platform=position.platform,
             timestamp=timestamp,
-            block_height=position.block_height,
+            block_number=position.block_number,
             token_symbol=child.symbol,
             token_amount=float(child.amount),
             state=child.state

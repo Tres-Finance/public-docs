@@ -15,7 +15,7 @@ class StatelessPosition(CamelModel):
     display_name: str
     platform: Platform
     position_type: PositionType
-    block_height: int | None
+    block_number: int | None
     children: list[StatelessAssetBalanceChild]
 
 class StatelessAssetDetails(CamelModel):
