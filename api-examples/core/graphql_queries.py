@@ -183,46 +183,43 @@ mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timest
 }
 """
 
+GET_STATELESS_BALANCES_MUTATION = """
+mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timestamp: DateTime, $assetIdentifier: String!) {
+  getStatelessTokenBalance(walletIdentifiers: $walletIdentifiers, platform: $platform, timestamp: $timestamp, assetIdentifier: $assetIdentifier) {
+      results {
+        amount
+        originalAmount
+        walletIdentifier
+        state
+      }
+  }
+}
+"""
+
 SUB_TRANSACTIONS_DATA_QUERY = """
 query GetSubTxs(
-    $limit: Int, $offset: Int, $belongsTo_Identifier_In: [String], $tx_Timestamp_Gt: DateTime, $tags_Overlap: [String],
+    $asset_Identifier_In: [String]
+    $limit: Int, $offset: Int, $belongsTo_Identifier_In: [String], $tx_Timestamp_Gt: DateTime, $tx_Timestamp_Lt: DateTime, $tags_Overlap: [String],
     $sender_Identifier_In: [String], $platform_In: [String], $tx_Classification_Activity_In: [String], $recipient_Identifier_In: [String]
 ) {
  subTransaction(
     limit: $limit, offset: $offset, belongsTo_Identifier_In: $belongsTo_Identifier_In, recipient_Identifier_In: $recipient_Identifier_In,
-    tx_Timestamp_Gt: $tx_Timestamp_Gt, tags_Overlap: $tags_Overlap, sender_Identifier_In: $sender_Identifier_In,
-    platform_In: $platform_In, tx_Classification_Activity_In: $tx_Classification_Activity_In) {
+    tx_Timestamp_Gt: $tx_Timestamp_Gt, tags_Overlap: $tags_Overlap, sender_Identifier_In: $sender_Identifier_In, tx_Timestamp_Lt: $tx_Timestamp_Lt,
+    platform_In: $platform_In, tx_Classification_Activity_In: $tx_Classification_Activity_In, asset_Identifier_In: $asset_Identifier_In) {
    totalCount
    results {
-     amount
-     balanceFactor
-     timestamp
-     type
-     platform
-     belongsTo {
-         tags
-         name
-         identifier
-     }
-     sender {
-         identifier
-     }
-     recipient {
-         identifier
-     }
-     tx {
+    amount
+    balanceFactor
+    timestamp
+    tx {
         identifier
         blockNumber
         classification {
             action
             activity
         }
-     }
-     asset {
-         symbol
-         name
-
-     }
+    }
+    internalAccountRunningBalanceAfter
    }
  }
 }

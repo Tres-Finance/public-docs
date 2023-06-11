@@ -3,12 +3,12 @@ from .basic import *
 from .enums import *
 
 class StatelessAssetBalanceChild(CamelModel):
-    asset_identifier: str
     wallet_identifier: str
     state: BalanceState
     original_amount: str
     amount: str
-    symbol: str
+    asset_identifier: Optional[str] = None
+    symbol: Optional[str] = None
 
 class StatelessPosition(CamelModel):
     wallet_identifier: str

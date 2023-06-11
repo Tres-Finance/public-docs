@@ -22,3 +22,4 @@ POLYGON_START_DATE = datetime(2023, 4, 1, tzinfo=UTC)
 POLYGON_END_DATE = datetime(2023, 5, 1, tzinfo=UTC)
 CLIENT_ID = ""
 CLIENT_SECRET = ""
+ACCESS_TOKEN = ""

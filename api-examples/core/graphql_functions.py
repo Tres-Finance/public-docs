@@ -3,15 +3,18 @@ from .graphqlclient import GraphQLClient
 from .graphql_queries import *
 import logging
 from datetime import datetime
-from .models.stateless_response import StatelessPosition
+from .models.stateless_response import StatelessPosition, StatelessAssetBalanceChild
 
 def get_graphql_client(
-    client_id: str,
-    client_secret: str
+    client_id: str | None = None,
+    client_secret: str | None = None,
+    access_token: str | None = None
 ) -> GraphQLClient:
 
     graphql_client = GraphQLClient(endpoint="https://api.prod.tres.finance/graphql")
-    access_token = get_access_token(graphql_client, client_id, client_secret)
+    if not access_token:
+        access_token = get_access_token(graphql_client, client_id, client_secret)
+    
     graphql_client.inject_token(f'Bearer {access_token}', 'Authorization')
 
     logging.info(f"GraphQL client created with access token: {access_token}")
@@ -23,10 +26,10 @@ def execute_grahpql_query(
     query: str,
     variables: dict
 ) -> dict:
-    logging.info(f"\n\nExecuting query: {query}")
-    logging.info(f"Executing variables: {json.dumps(variables)}")
+    logging.debug(f"\n\nExecuting query: {query}")
+    logging.debug(f"Executing variables: {json.dumps(variables)}")
     data = json.loads(graphql_client.execute(query=query, variables=variables))
-    logging.info(f"Got response: {json.dumps(data)}\n\n")
+    logging.debug(f"Got response: {json.dumps(data)}\n\n")
     return data
 
 def get_access_token(
@@ -170,6 +173,7 @@ def get_sub_transactions_data_in_account_context(
     senders: list[str] = None,
     recipients: list[str] = None,
     platforms: list[str] = None,
+    asset_identifiers: list[str] = None,
     offset: int = 0,
     limit: int = 100
 ):
@@ -183,7 +187,8 @@ def get_sub_transactions_data_in_account_context(
         belongsTo_Identifier_In=identifiers if identifiers else None,
         sender_Identifier_In=senders if senders else None,
         recipient_Identifier_In=recipients if recipients else None,
-        platform_In=platforms if platforms else None
+        platform_In=platforms if platforms else None,
+        asset_Identifier_In=asset_identifiers if asset_identifiers else None,
     )
     response = execute_grahpql_query(
         graphql_client, SUB_TRANSACTIONS_DATA_QUERY, variables
@@ -208,3 +213,22 @@ def get_stateless_positions(
         graphql_client, GET_STATELESS_POSITIONS_MUTATION, variables
     )["data"]["getStatelessWalletsPositions"]["results"]
     return [StatelessPosition.parse_obj(position) for position in response]
+
+
+def get_stateless_balances(
+    graphql_client: GraphQLClient,
+    wallet_identifiers: list[str],
+    platform: str,
+    timestamp: datetime = None,
+    asset_identifier: str = None
+) -> list[StatelessAssetBalanceChild]:
+    variables = dict(
+        walletIdentifiers=wallet_identifiers,
+        platform=platform,
+        assetIdentifier=asset_identifier,
+        timestamp=timestamp.isoformat() if timestamp else None
+    )
+    response = execute_grahpql_query(
+        graphql_client, GET_STATELESS_BALANCES_MUTATION, variables
+    )["data"]["getStatelessTokenBalance"]["results"]
+    return [StatelessAssetBalanceChild.parse_obj(balance) for balance in response]
