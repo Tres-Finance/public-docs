@@ -199,27 +199,36 @@ mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timest
 SUB_TRANSACTIONS_DATA_QUERY = """
 query GetSubTxs(
     $asset_Identifier_In: [String]
-    $limit: Int, $offset: Int, $belongsTo_Identifier_In: [String], $tx_Timestamp_Gt: DateTime, $tx_Timestamp_Lt: DateTime, $tags_Overlap: [String],
+    $limit: Int, $offset: Int, $belongsTo_Identifier_In: [String], $timestamp_Gt: DateTime, $timestamp_Lt: DateTime, $tags_Overlap: [String],
     $sender_Identifier_In: [String], $platform_In: [String], $tx_Classification_Activity_In: [String], $recipient_Identifier_In: [String]
 ) {
  subTransaction(
     limit: $limit, offset: $offset, belongsTo_Identifier_In: $belongsTo_Identifier_In, recipient_Identifier_In: $recipient_Identifier_In,
-    tx_Timestamp_Gt: $tx_Timestamp_Gt, tags_Overlap: $tags_Overlap, sender_Identifier_In: $sender_Identifier_In, tx_Timestamp_Lt: $tx_Timestamp_Lt,
+    timestamp_Gt: $timestamp_Gt, tags_Overlap: $tags_Overlap, sender_Identifier_In: $sender_Identifier_In, timestamp_Lt: $timestamp_Lt,
     platform_In: $platform_In, tx_Classification_Activity_In: $tx_Classification_Activity_In, asset_Identifier_In: $asset_Identifier_In) {
    totalCount
    results {
     amount
     balanceFactor
     timestamp
+    belongsTo {
+        identifier
+    }
     tx {
         identifier
         blockNumber
+        methodId
         classification {
             action
             activity
         }
     }
-    internalAccountRunningBalanceAfter
+    recipient {
+        identifier
+    }
+    sender {
+        identifier
+    }
    }
  }
 }

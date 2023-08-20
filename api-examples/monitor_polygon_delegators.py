@@ -82,16 +82,18 @@ def get_polygon_position(graphql_client, delegator: str, timestamp: datetime) ->
         timestamp=timestamp
     )
 
+def get_number_of_days(start_date: datetime, end_date: datetime) -> int:
+    return (end_date - start_date).days
+
 def main():
 
     # Login
-    graphql_client = get_graphql_client(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET
-    )
-    days = (POLYGON_END_DATE - POLYGON_START_DATE).days
+    graphql_client = get_graphql_client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+    
+    days = get_number_of_days(POLYGON_START_DATE, POLYGON_END_DATE)
 
     output: list[StakingPositionMonitoringOutput] = []
+
     for index in range(days + 1):
         date_to_test = POLYGON_START_DATE + timedelta(days=index)
         for delegator in POLYGON_DELEGATORS:

@@ -2,8 +2,10 @@ import json
 from .graphqlclient import GraphQLClient
 from .graphql_queries import *
 import logging
+from typing import Optional
 from datetime import datetime
 from .models.stateless_response import StatelessPosition, StatelessAssetBalanceChild
+from .models.transaction_response import SubTransaction
 
 def get_graphql_client(
     client_id: str | None = None,
@@ -165,15 +167,15 @@ def get_transactions_data_in_org_context(
 
 def get_sub_transactions_data_in_account_context(
     graphql_client: GraphQLClient,
-    start_date: datetime = None,
-    end_date: datetime = None,
-    activities: list[str] = None,
-    tags: list[str] = None,
-    identifiers: list[str] = None,
-    senders: list[str] = None,
-    recipients: list[str] = None,
-    platforms: list[str] = None,
-    asset_identifiers: list[str] = None,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+    activities: Optional[list[str]] = None,
+    tags: Optional[list[str]] = None,
+    identifiers: Optional[list[str]] = None,
+    senders: Optional[list[str]] = None,
+    recipients: Optional[list[str]] = None,
+    platforms: Optional[list[str]] = None,
+    asset_identifiers: Optional[list[str]] = None,
     offset: int = 0,
     limit: int = 100
 ):
@@ -181,8 +183,8 @@ def get_sub_transactions_data_in_account_context(
         limit=limit,
         offset=offset,
         tx_Classification_Activity_In=activities if activities else None,
-        tx_Timestamp_Gt=start_date.isoformat() if start_date else None,
-        tx_Timestamp_Lt=end_date.isoformat() if end_date else None,
+        timestamp_Gt=start_date.isoformat() if start_date else None,
+        timestamp_Lt=end_date.isoformat() if end_date else None,
         tags_Overlap=tags if tags else None,
         belongsTo_Identifier_In=identifiers if identifiers else None,
         sender_Identifier_In=senders if senders else None,
@@ -232,3 +234,23 @@ def get_stateless_balances(
         graphql_client, GET_STATELESS_BALANCES_MUTATION, variables
     )["data"]["getStatelessTokenBalance"]["results"]
     return [StatelessAssetBalanceChild.parse_obj(balance) for balance in response]
+
+
+def get_all_sub_transactions(graphql_client, start_date: datetime, end_date: datetime, platform: str, activities: list[str] | None, identifiers: list[str] | None = None):
+    sub_transactions = []
+    offset = 0
+    while True:
+        sub_transactions += get_sub_transactions_data_in_account_context(
+            graphql_client,
+            start_date=start_date,
+            end_date=end_date,
+            activities=activities if activities else None,
+            platforms=[platform],
+            identifiers=identifiers if identifiers else None,
+            offset=offset
+        )["results"]
+        offset += 100
+        if len(sub_transactions) < offset:
+            break
+
+    return [SubTransaction.parse_obj(sub_transaction) for sub_transaction in sub_transactions]
