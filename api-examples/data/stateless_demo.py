@@ -20,6 +20,6 @@ POLYGON_DELEGATORS: list[str] = [
 
 POLYGON_START_DATE = datetime(2023, 4, 1, tzinfo=UTC)
 POLYGON_END_DATE = datetime(2023, 5, 1, tzinfo=UTC)
-CLIENT_ID = "tC0TQTCMvJ82ueBxIFigkJYwzOlTKbk9"
-CLIENT_SECRET = "DGlRtdDncgp0fqy9fJ2b3By9qBLkeszgvXht8UxEuUSDCwSxtj5vTptThWJZcm3S"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 ACCESS_TOKEN = ""
