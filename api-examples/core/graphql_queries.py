@@ -214,6 +214,9 @@ query GetSubTxs(
     belongsTo {
         identifier
     }
+    asset {
+        symbol
+    }
     tx {
         identifier
         blockNumber

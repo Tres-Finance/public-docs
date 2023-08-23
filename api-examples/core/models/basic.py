@@ -30,6 +30,6 @@ class Account(CamelModel):
     platform: Optional[str] = None
 
 class Asset(CamelModel):
-    symbol: str
-    name: str
+    symbol: Optional[str] = None
+    name: Optional[str] = None
     platform: Optional[str] = None
