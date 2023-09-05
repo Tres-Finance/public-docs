@@ -210,6 +210,7 @@ query GetSubTxs(
    results {
     amount
     balanceFactor
+    type
     timestamp
     belongsTo {
         identifier

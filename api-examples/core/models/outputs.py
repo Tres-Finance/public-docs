@@ -6,7 +6,7 @@ class StakingPositionMonitoringOutput(BaseModel):
     hash: Optional[str] =  None
     delegator_address: str
     position_name: str
-    platform: Platform
+    platform: Optional[Platform] = None
     timestamp: datetime
     block_number: Optional[int] = None
     token_symbol: str

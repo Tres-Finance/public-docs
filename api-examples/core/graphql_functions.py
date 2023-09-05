@@ -28,10 +28,10 @@ def execute_grahpql_query(
     query: str,
     variables: dict
 ) -> dict:
-    logging.debug(f"\n\nExecuting query: {query}")
-    logging.debug(f"Executing variables: {json.dumps(variables)}")
+    logging.info(f"\n\nExecuting query: {query}")
+    logging.info(f"Executing variables: {json.dumps(variables)}")
     data = json.loads(graphql_client.execute(query=query, variables=variables))
-    logging.debug(f"Got response: {json.dumps(data)}\n\n")
+    logging.info(f"Got response: {json.dumps(data)}\n\n")
     return data
 
 def get_access_token(
@@ -214,7 +214,10 @@ def get_stateless_positions(
     response = execute_grahpql_query(
         graphql_client, GET_STATELESS_POSITIONS_MUTATION, variables
     )["data"]["getStatelessWalletsPositions"]["results"]
-    return [StatelessPosition.parse_obj(position) for position in response]
+    try:
+        return [StatelessPosition.parse_obj(position) for position in response]
+    except Exception as e:
+        import pdb; pdb.set_trace()
 
 
 def get_stateless_balances(
@@ -249,6 +252,7 @@ def get_all_sub_transactions(graphql_client, start_date: datetime, end_date: dat
             identifiers=identifiers if identifiers else None,
             offset=offset
         )["results"]
+
         offset += 100
         if len(sub_transactions) < offset:
             break

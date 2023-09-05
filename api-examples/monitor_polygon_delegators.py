@@ -10,17 +10,21 @@ def get_withdrawals(graphql_client, start_date: datetime, end_date: datetime, de
     sub_transactions = []
     offset = 0
     while True:
-        sub_transactions += get_sub_transactions_data_in_account_context(
-            graphql_client,
-            start_date=start_date,
-            end_date=end_date,
-            senders=contracts,
-            identifiers=delegators,
-            offset=offset
-        )["results"]
-        offset += 100
-        if len(sub_transactions) < offset:
-            break
+        try:
+            sub_transactions += get_sub_transactions_data_in_account_context(
+                graphql_client,
+                start_date=start_date,
+                end_date=end_date,
+                senders=contracts,
+                identifiers=delegators,
+                offset=offset
+            ).get("results", [])
+            offset += 100
+            if len(sub_transactions) < offset:
+                break
+        except Exception as e:
+            print(e)
+            import pdb; pdb.set_trace()
 
     return [parse_sbx_to_event(SubTransaction.parse_obj(sub_transaction), BalanceState.WITHDRAWN) for sub_transaction in sub_transactions]
 

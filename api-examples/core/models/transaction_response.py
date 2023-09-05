@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from functools import cached_property
 from pydantic import root_validator
 from datetime import datetime
+from datetime import date as datetype
 from .basic import *
 from .enums import *
 
@@ -42,12 +43,13 @@ class SubTransactionResponse(CamelModel):
 class GeneratedRewardsReportOutput(CamelModel):
     blockchain: Optional[str] = None
     address: str
-    date: datetime
+    date: Optional[datetype] = None
     generated_rewards: float
     generated_commission: float
     action: str
-    tags: list[str]
+    tags: Optional[list[str]] = []
     asset: str
     hash: str
+    validator: str
 
     

@@ -17,7 +17,8 @@ def parse_output(sbxs: list[SubTransaction]):
                 tags=sbx.belongs_to.tags,
                 action=sbx.tx.classification.action,
                 asset=sbx.asset.symbol,
-                hash=sbx.tx.identifier
+                hash=sbx.tx.identifier,
+                validator=sbx.sender.identifier
             )
         )
 
@@ -30,8 +31,8 @@ def main():
         client_secret=CLIENT_SECRET
     )
     
-    start_date = datetime(2023, 3, 26)
-    end_date = datetime(2023, 4, 7)
+    start_date = datetime(2023, 1, 1)
+    end_date = datetime(2023, 9, 1)
     platform = "cosmos"
     sub_transactions = get_all_sub_transactions(
         graphql_client, start_date, end_date, platform, ["STAKING REWARDS", "ACCRUED STAKING REWARDS"]
