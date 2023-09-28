@@ -122,6 +122,16 @@ def main():
 
         checked_delegators_dates.add((sbx.delegator_address, sbx.timestamp))
 
+    for delegator in POLYGON_DELEGATORS:
+        for state in [BalanceState.WITHDRAWN, BalanceState.DEPOSITED]:
+            output.append(
+                StakingPositionMonitoringOutput(
+                    delegator_address=delegator,
+                    state=state,
+                    token_symbol="MATIC",
+                    token_amount=0
+                )
+            )
     write_output(output)
 
 if __name__ == "__main__":

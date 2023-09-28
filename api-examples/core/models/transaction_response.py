@@ -18,6 +18,7 @@ class Transaction(CamelModel):
     block_number: Optional[int] = None
 
 class SubTransaction(CamelModel):
+    id: str
     balance_impact: Optional[float] = None
     amount: float
     balance_factor: int
@@ -35,7 +36,7 @@ class SubTransaction(CamelModel):
         balance_impact = values["balance_factor"] * values["amount"]
         values["balance_impact"] = balance_impact
         return values
-    
+
 class SubTransactionResponse(CamelModel):
     total_count: int
     results: list[SubTransaction]

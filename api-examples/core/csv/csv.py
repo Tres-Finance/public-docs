@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import List, Dict, Union
 
 
-def create_csv(filer, headers: list[str]) -> csv.DictWriter:
+def create_csv(filer, headers: list[str], append: bool = False) -> csv.DictWriter:
     writer = csv.DictWriter(filer, fieldnames=headers)
     writer.writeheader()
     return writer

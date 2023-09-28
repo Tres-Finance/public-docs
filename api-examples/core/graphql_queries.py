@@ -31,6 +31,10 @@ GET_INTERNAL_WALLETS_QUERY = """query GetAccountById($limit: Int, $offset: Int) 
         results {
             name
             identifier
+            platforms
+            parentPlatform
+            totalFiatValue
+            tags
         }
     }
 }"""
@@ -210,6 +214,7 @@ query GetSubTxs(
    results {
     amount
     balanceFactor
+    id
     type
     timestamp
     belongsTo {
@@ -222,10 +227,6 @@ query GetSubTxs(
         identifier
         blockNumber
         methodId
-        classification {
-            action
-            activity
-        }
     }
     recipient {
         identifier

@@ -23,7 +23,11 @@ class FiatValue(CamelModel):
 class InternalAccount(CamelModel):
     identifier: str
     name: Optional[str] = None
+    description: Optional[str] = None
     tags: Optional[list[str]] = None
+    platforms: Optional[list[str]] = None
+    parent_platform: Optional[str] = None
+    totalFiatValue: Optional[float] = None
 
 class Account(CamelModel):
     identifier: str

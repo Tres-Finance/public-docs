@@ -3,9 +3,10 @@ from .graphqlclient import GraphQLClient
 from .graphql_queries import *
 import logging
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 from .models.stateless_response import StatelessPosition, StatelessAssetBalanceChild
 from .models.transaction_response import SubTransaction
+from .models.basic import InternalAccount
 
 def get_graphql_client(
     client_id: str | None = None,
@@ -84,14 +85,11 @@ def create_wallet(
 def get_internal_wallets(
     graphql_client: GraphQLClient,
 ):
-    variables = dict(
-        limit=100,
-        offset=0
-    )
+    variables = dict()
     response = execute_grahpql_query(
         graphql_client, GET_INTERNAL_WALLETS_QUERY, variables
     )["data"]["internalAccount"]
-    return response
+    return [InternalAccount.parse_obj(ia) for ia in response["results"]]
 
 def trigger_commit(
     graphql_client: GraphQLClient
@@ -217,7 +215,7 @@ def get_stateless_positions(
     try:
         return [StatelessPosition.parse_obj(position) for position in response]
     except Exception as e:
-        import pdb; pdb.set_trace()
+        return get_stateless_positions(graphql_client, wallet_identifiers, platform, application, timestamp + timedelta(minutes=1))
 
 
 def get_stateless_balances(

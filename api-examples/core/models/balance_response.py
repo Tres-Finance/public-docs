@@ -16,12 +16,3 @@ class Balance(CamelModel):
 class BalanceResponse(CamelModel):
     total_count: int
     results : list[Balance]
-
-class BalanceOutput(CamelModel):
-    blockchain: str
-    validator_address: str
-    timestamp: str
-    block_number: int
-    total_staked_native: float
-    total_staked_fiat: float
-    status: str
