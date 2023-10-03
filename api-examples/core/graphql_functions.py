@@ -229,7 +229,7 @@ def get_stateless_balances(
         walletIdentifiers=wallet_identifiers,
         platform=platform,
         assetIdentifier=asset_identifier,
-        timestamp=timestamp.isoformat() if timestamp else None
+        timestamp=timestamp.isoformat().replace("+00:00", "") if timestamp else None
     )
     response = execute_grahpql_query(
         graphql_client, GET_STATELESS_BALANCES_MUTATION, variables

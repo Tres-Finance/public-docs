@@ -215,6 +215,7 @@ query GetSubTxs(
     amount
     balanceFactor
     id
+    internalAccountRunningBalanceAfter
     type
     timestamp
     belongsTo {
