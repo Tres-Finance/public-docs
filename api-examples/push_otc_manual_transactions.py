@@ -38,7 +38,7 @@ def read_csv(file_path: str) -> list[RowInput]:
 def main():
     rows = read_csv(FILE_PATH)
     
-    # Login
+    # Login, CLIENT_ID + CLINET_SCRERET OR ACCESS_TOKEN
     graphql_client = get_graphql_client(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
