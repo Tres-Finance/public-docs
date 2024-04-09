@@ -10,6 +10,9 @@ class StatelessAssetBalanceChild(CamelModel):
     asset_identifier: Optional[str] = None
     symbol: Optional[str] = None
 
+class Extras(CamelModel):
+    validator_address: Optional[str]
+
 class StatelessPosition(CamelModel):
     wallet_identifier: str
     display_name: str
@@ -17,6 +20,7 @@ class StatelessPosition(CamelModel):
     position_type: PositionType
     block_number: int | None
     children: list[StatelessAssetBalanceChild]
+    extras: Extras | None = None
 
 class StatelessAssetDetails(CamelModel):
     decimals: int

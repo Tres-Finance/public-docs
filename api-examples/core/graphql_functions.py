@@ -210,12 +210,9 @@ def get_stateless_positions(
         timestamp=timestamp.isoformat() if timestamp else None
     )
     response = execute_grahpql_query(
-        graphql_client, GET_STATELESS_POSITIONS_MUTATION, variables
-    )["data"]["getStatelessWalletsPositions"]["results"]
-    try:
-        return [StatelessPosition.parse_obj(position) for position in response]
-    except Exception as e:
-        return get_stateless_positions(graphql_client, wallet_identifiers, platform, application, timestamp + timedelta(minutes=1))
+        graphql_client, GET_STATELESS_POSITIONS_QUEEY, variables
+    )["data"]["getStatelessWalletsPositions"]
+    return [StatelessPosition.parse_obj(position) for position in response if position["children"]]
 
 
 def get_stateless_balances(
@@ -232,7 +229,7 @@ def get_stateless_balances(
         timestamp=timestamp.isoformat().replace("+00:00", "") if timestamp else None
     )
     response = execute_grahpql_query(
-        graphql_client, GET_STATELESS_BALANCES_MUTATION, variables
+        graphql_client, GET_STATELESS_BALANCES_QUERY, variables
     )["data"]["getStatelessTokenBalance"]["results"]
     return [StatelessAssetBalanceChild.parse_obj(balance) for balance in response]
 

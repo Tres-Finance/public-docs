@@ -115,6 +115,8 @@ class Platform(CaseInsensitiveStrEnum):
     SUI = 'sui'
     BTCTURK = 'btcturk'
     ASCENDEX = 'ascendex'
+    DYDX = 'dydx'
+    CELESTIA = 'celestia'
 
 class BalanceState(CaseInsensitiveStrEnum):
     LOCKED = 'locked'

@@ -92,7 +92,7 @@ def get_number_of_days(start_date: datetime, end_date: datetime) -> int:
 def main():
 
     # Login
-    graphql_client = get_graphql_client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+    graphql_client = get_graphql_client(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, access_token=ACCESS_TOKEN)
     
     days = get_number_of_days(POLYGON_START_DATE, POLYGON_END_DATE)
 

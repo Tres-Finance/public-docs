@@ -165,37 +165,37 @@ mutation MyMutation(
 }
 """
 
-GET_STATELESS_POSITIONS_MUTATION = """
-mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timestamp: DateTime, $application: String) {
+GET_STATELESS_POSITIONS_QUEEY = """
+query StatelessWalletPositions($walletIdentifiers: [String]!, $platform: Platform!, $timestamp: DateTime, $application: String) {
   getStatelessWalletsPositions(walletIdentifiers: $walletIdentifiers, platform: $platform, timestamp: $timestamp, application: $application) {
-      results {
+    walletIdentifier
+    displayName
+    blockNumber
+    platform
+    positionType
+    extras {
+        validatorAddress
+    }
+    children {
+        amount
+        originalAmount
         walletIdentifier
-        displayName
-        blockNumber
-        platform
-        positionType
-        children {
-            amount
-            originalAmount
-            walletIdentifier
-            assetIdentifier
-            state
-            symbol
-        }
-      }
+        assetIdentifier
+        state
+        symbol
+    }
   }
 }
 """
 
-GET_STATELESS_BALANCES_MUTATION = """
-mutation MyMutation($walletIdentifiers: [String]!, $platform: Platform!, $timestamp: DateTime, $assetIdentifier: String!) {
+GET_STATELESS_BALANCES_QUERY = """
+query MyQuery($walletIdentifiers: [String]!, $platform: Platform!, $timestamp: DateTime, $assetIdentifier: String!) {
   getStatelessTokenBalance(walletIdentifiers: $walletIdentifiers, platform: $platform, timestamp: $timestamp, assetIdentifier: $assetIdentifier) {
-      results {
-        amount
-        originalAmount
-        walletIdentifier
-        state
-      }
+    amount
+    originalAmount
+    walletIdentifier
+    state
+      
   }
 }
 """
