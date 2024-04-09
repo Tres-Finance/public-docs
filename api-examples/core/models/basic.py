@@ -9,6 +9,14 @@ from humps import camelize
 def to_camel(string):
     return camelize(string)
 
+class Currency(StrEnum):
+    USD = "USD"
+    EUR = "EUR"
+
+
+class Direction(StrEnum):
+    INFLOW = "INFLOW"
+    OUTFLOW = "OUTFLOW"
 
 class CamelModel(BaseModel):
     class Config:

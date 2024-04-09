@@ -239,3 +239,39 @@ query GetSubTxs(
  }
 }
 """
+
+CREATE_MANUAL_TRANSACTION_MUTATION = """
+mutation ManualTransaction($identifier: String!, $platform: Platform!, $timestamp: DateTime!) {
+  createOrUpdateManualTransaction(identifier: $identifier, platform: $platform, timestamp: $timestamp) {
+      transaction {
+        identifier
+        platform
+        timestamp
+        id
+      }
+  }
+  
+}
+"""
+
+CREATE_MANUAL_SUB_TRANSACTION_MUTATION = """
+mutation ManualSubTransaction($amount: Decimal!, $fiatValue: Decimal, $assetId: ID!, $belongsToId: ID!, $thirdPartyIdentifier: String!, $transactionId: ID!, $direction: Direction, $typeId: ID!, $action: FinancialAction!, $platform: Platform!, $fiatCurrency: Currency!) {
+  createOrUpdateManualSubTransaction(
+    amount: $amount
+    assetId: $assetId
+    belongsToId: $belongsToId
+    thirdPartyIdentifier: $thirdPartyIdentifier
+    transactionId: $transactionId
+    direction: $direction
+    typeId: $typeId
+    financialAction: $action
+    platform: $platform
+    fiatValue: $fiatValue
+    fiatCurrency: $fiatCurrency
+  ) {
+    subTransaction {
+      id
+    }
+  }
+}
+"""

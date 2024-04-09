@@ -5,7 +5,7 @@ import logging
 from typing import Optional
 from datetime import datetime, timedelta
 from .models.stateless_response import StatelessPosition, StatelessAssetBalanceChild
-from .models.transaction_response import SubTransaction
+from .models.transaction_response import SubTransaction, Platform, Currency, Direction
 from .models.basic import InternalAccount
 
 def get_graphql_client(
@@ -253,3 +253,34 @@ def get_all_sub_transactions(graphql_client, start_date: datetime, end_date: dat
             break
 
     return [SubTransaction.parse_obj(sub_transaction) for sub_transaction in sub_transactions]
+
+def create_manual_transaction(graphql_client, identifier: str, timestamp: datetime, platform: Platform):
+    variables = dict(
+        identifier=identifier,
+        timestamp=timestamp.isoformat(),
+        platform=platform.name
+    )
+    response = execute_grahpql_query(
+        graphql_client, CREATE_MANUAL_TRANSACTION_MUTATION, variables
+    )["data"]["createOrUpdateManualTransaction"]["transaction"]
+    return response
+
+def create_manual_sub_transaction(graphql_client, tx_id: str, amount: float, currency: Currency, fiat_value: float | None,
+                        asset: str, belong_to_id: int, direction: Direction, type_id: str):
+    variables = dict(
+        transactionId=str(tx_id),
+        amount=amount,
+        platform=Platform.MANUAL.name,
+        fiatCurrency=currency.name,
+        fiatValue=fiat_value,
+        assetId=f"{Platform.MANUAL}_{asset}".lower(),
+        belongsToId=str(belong_to_id),
+        thirdPartyIdentifier="native",
+        direction=direction.name,
+        typeId=type_id,
+        action="TOKEN_TRANSFER"
+    )
+    response = execute_grahpql_query(
+        graphql_client, CREATE_MANUAL_SUB_TRANSACTION_MUTATION, variables
+    )["data"]["createOrUpdateManualSubTransaction"]
+    return response
