@@ -254,11 +254,11 @@ def get_all_sub_transactions(graphql_client, start_date: datetime, end_date: dat
 
     return [SubTransaction.parse_obj(sub_transaction) for sub_transaction in sub_transactions]
 
-def create_manual_transaction(graphql_client, identifier: str, timestamp: datetime, platform: Platform):
+def create_manual_transaction(graphql_client, identifier: str, timestamp: datetime):
     variables = dict(
         identifier=identifier,
         timestamp=timestamp.isoformat(),
-        platform=platform.name
+        platform=Platform.MANUAL.name,
     )
     response = execute_grahpql_query(
         graphql_client, CREATE_MANUAL_TRANSACTION_MUTATION, variables

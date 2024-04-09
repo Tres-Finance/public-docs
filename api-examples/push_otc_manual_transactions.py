@@ -50,8 +50,7 @@ def main():
         tx = create_manual_transaction(
             graphql_client,
             row.ClOrdID,
-            row.datetime,
-            Platform.MANUAL
+            row.datetime
         )
         tx_id = tx.get("id") # We want to hold the TRES Internal Transaction ID
 
