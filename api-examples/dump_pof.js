@@ -11,9 +11,10 @@ const fs = require('fs');
 
 let mongoClient
 const mongoUrl = 'ENTER CONNECTION STRING';
-const dates = ["2024-05-01", "2024-06-01"] // Enter dates
-const networks = ["polygon", "solana"] // Enter networks
-const symbols = ["USDC"] // Enter token symbols
+const dates = ["2024-07-01", "2024-06-01"] // Enter dates
+const networks = ["ethereum"] // Enter networks
+const symbols = ["ETH"] // Enter token symbols
+const DB_NAME = "my-pof" // Enter db name
 
 exportFromMongo(dates, networks, symbols)
 
@@ -28,7 +29,7 @@ async function exportFromMongo(dates = [], networks = [], symbols = []) {
         mongoClient = new mongodb.MongoClient(mongoUrl);
         await mongoClient.connect()
         console.log('Connected to MongoDB');
-        const db = mongoClient.db('demo-us-pof');
+        const db = mongoClient.db(DB_NAME);
         const collection = db.collection('accountBalances');
 
         console.log(`Fetching balances for dates: ${dates} networks: ${networks} and symbols: ${symbols}`)
