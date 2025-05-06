@@ -5,8 +5,8 @@ from .enums import *
 class StatelessAssetBalanceChild(CamelModel):
     wallet_identifier: str
     state: BalanceState
-    original_amount: str
-    amount: str
+    original_amount: str | float
+    amount: Optional[str] = None
     asset_identifier: Optional[str] = None
     symbol: Optional[str] = None
 

@@ -14,7 +14,7 @@ def get_graphql_client(
     access_token: str | None = None
 ) -> GraphQLClient:
 
-    graphql_client = GraphQLClient(endpoint="https://api.prod.tres.finance/graphql")
+    graphql_client = GraphQLClient(endpoint="https://api.tres.finance/graphql")
     if not access_token:
         access_token = get_access_token(graphql_client, client_id, client_secret)
     
@@ -174,6 +174,7 @@ def get_sub_transactions_data_in_account_context(
     recipients: Optional[list[str]] = None,
     platforms: Optional[list[str]] = None,
     asset_identifiers: Optional[list[str]] = None,
+    tx_identifiers: Optional[list[str]] = None,
     offset: int = 0,
     limit: int = 100
 ):
@@ -189,6 +190,7 @@ def get_sub_transactions_data_in_account_context(
         recipient_Identifier_In=recipients if recipients else None,
         platform_In=platforms if platforms else None,
         asset_Identifier_In=asset_identifiers if asset_identifiers else None,
+        tx_Identifier_In=tx_identifiers if tx_identifiers else None,
     )
     response = execute_grahpql_query(
         graphql_client, SUB_TRANSACTIONS_DATA_QUERY, variables
@@ -230,7 +232,7 @@ def get_stateless_balances(
     )
     response = execute_grahpql_query(
         graphql_client, GET_STATELESS_BALANCES_QUERY, variables
-    )["data"]["getStatelessTokenBalance"]["results"]
+    )["data"]["getStatelessTokenBalance"]
     return [StatelessAssetBalanceChild.parse_obj(balance) for balance in response]
 
 
@@ -284,3 +286,20 @@ def create_manual_sub_transaction(graphql_client, tx_id: str, amount: float, cur
         graphql_client, CREATE_MANUAL_SUB_TRANSACTION_MUTATION, variables
     )["data"]["createOrUpdateManualSubTransaction"]
     return response
+
+
+def get_all_sub_transactions_b(graphql_client, tx_identifiers: list[str] | None = None):
+    sub_transactions = []
+    offset = 0
+    while True:
+        sub_transactions += get_sub_transactions_data_in_account_context(
+            graphql_client,
+
+            offset=offset
+        )["results"]
+
+        offset += 100
+        if len(sub_transactions) < offset:
+            break
+
+    return [SubTransaction.parse_obj(sub_transaction) for sub_transaction in sub_transactions]

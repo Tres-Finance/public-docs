@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from functools import cached_property
-from pydantic import root_validator
+from pydantic import model_validator
 from datetime import datetime
 from datetime import date as datetype
 from .basic import *
@@ -31,7 +31,7 @@ class SubTransaction(CamelModel):
     tx: Transaction
     platform: Optional[Platform] = None
 
-    @root_validator
+    @model_validator(mode='after')
     def compute_balance_impact(cls, values):
         balance_impact = values["balance_factor"] * values["amount"]
         values["balance_impact"] = balance_impact
