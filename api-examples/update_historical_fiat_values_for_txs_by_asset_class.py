@@ -5,16 +5,10 @@ from datetime import datetime, timezone
 import csv
 import os
 
-class WalletAssetPair(BaseModel):
-    wallet_address: str
+class AssetClassPair(BaseModel):
+    asset_class_id: str
     fiat_currency: str
     fiat_price: float
-    platform: str
-    asset_identifier: str
-
-    @property
-    def asset_id(self):
-        return self.platform + "_" + self.asset_identifier.lower()
 
 # --------------------------
 # CONFIGURATION
@@ -31,7 +25,7 @@ def graphql_request(payload):
     result = execute_grahpql_query(graphql_client, payload["query"], payload["variables"])
     return result
 
-def get_sub_transactions(wallet_identifier  , asset_id):
+def get_sub_transactions(asset_class_id):
     query = {
         "operationName": "readTxsQuery1",
         "variables": {
@@ -39,8 +33,7 @@ def get_sub_transactions(wallet_identifier  , asset_id):
             "offset": 0,
             "timestamp_Lt": END_DATE,
             "timestamp_Gt": START_DATE,
-            "belongsTo_Identifier_In": [wallet_identifier],
-            "asset_In": [str(asset_id)]
+            "asset_AssetClass_In": [str(asset_class_id)]
         },
         "query": """
             query GetSubTransactionByInternalAccountIdentifier(
@@ -55,7 +48,7 @@ def get_sub_transactions(wallet_identifier  , asset_id):
             $belongsTo_Identifier_In: [String],  
             $balanceFactor: Float,
             $tag: [String]
-            $asset_In: [ID],
+            $asset_AssetClass_In: [ID],
             $tx_Identifier_In: [String]) {
             subTransaction(
             balanceFactor: $balanceFactor,    
@@ -70,29 +63,10 @@ def get_sub_transactions(wallet_identifier  , asset_id):
             tx_DecodedFunctionName: $tx_DecodedFunctionName,
             tags_Overlap: $tag,
             tx_Identifier_In: $tx_Identifier_In 
-            asset_In: $asset_In
+            asset_AssetClass_In: $asset_AssetClass_In
             ) {
                 results {
                     id
-                    platform
-                    amount
-                    balanceFactor
-                    type
-                    tx {
-                        decodedFunctionName
-                        methodId
-                        blockNumber
-                        identifier
-                    }
-                    timestamp
-                    sender {
-                        identifier
-                    }
-                    recipient {
-                        identifier
-                    }
-                    createdAt
-                    updatedAt
                 }
             }
             }
@@ -106,7 +80,7 @@ def get_sub_transactions(wallet_identifier  , asset_id):
     return children
 
 
-def batch_update_fiat_value(sub_tx_ids, price, currency="usd"):
+def batch_update_fiat_value(sub_tx_ids, price, currency):
     if not sub_tx_ids:
         print("⚠ No sub-transactions to update.")
         return False
@@ -140,16 +114,16 @@ def batch_update_fiat_value(sub_tx_ids, price, currency="usd"):
         return False    
 
 
-def update_wallet_asset_fiat(wallet_asset_list: list[WalletAssetPair]):
-    for wallet_asset in wallet_asset_list:
-        print(f"\n===== Wallet: {wallet_asset.wallet_address} | Asset ID: {wallet_asset.asset_id} =====")
+def update_asset_class_fiat(asset_class_list: list[AssetClassPair]):
+    for asset_class in asset_class_list:
+        print(f"\n===== Asset Class: {asset_class.asset_class_id} =====")
         try:
-            sub_ids = get_sub_transactions(wallet_asset.wallet_address, wallet_asset.asset_id)
+            sub_ids = get_sub_transactions(asset_class.asset_class_id)
 
             print(f"🔍 Total sub-transactions to update: {len(sub_ids)}")
-            batch_update_fiat_value(sub_ids, wallet_asset.fiat_price, wallet_asset.fiat_currency)
+            batch_update_fiat_value(sub_ids, asset_class.fiat_price, asset_class.fiat_currency)
         except Exception as e:
-            print(f"❌ Error for wallet {wallet_asset.wallet_address}: {e}")
+            print(f"❌ Error for asset class {asset_class.asset_class_id}: {e}")
 
 
 # -----------------------------------
@@ -157,43 +131,41 @@ def update_wallet_asset_fiat(wallet_asset_list: list[WalletAssetPair]):
 # -----------------------------------
 if __name__ == "__main__":
     
-    def load_wallet_asset_pairs_from_csv(csv_file_path: str) -> list[WalletAssetPair]:
+    def load_asset_class_pairs_from_csv(csv_file_path: str) -> list[AssetClassPair]:
         """Load wallet asset pairs from CSV file"""
-        wallet_asset_pairs = []
+        asset_class_pairs = []
         
         if not os.path.exists(csv_file_path):
             print(f"❌ CSV file not found: {csv_file_path}")
-            return wallet_asset_pairs
+            return asset_class_pairs
             
         try:
             with open(csv_file_path, 'r', encoding='utf-8') as file:
                 csv_reader = csv.DictReader(file)
                 for row in csv_reader:
                     try:
-                        wallet_asset_pair = WalletAssetPair(
-                            wallet_address=row['wallet_address'],
-                            platform=row['platform'],
-                            asset_identifier=row['asset_identifier'],
+                        asset_class_pair = AssetClassPair(
+                            asset_class_id=row['asset_class_id'],
                             fiat_price=float(row['fiat_price']),
-                            fiat_currency="usd"  # Default to USD
+                            fiat_currency=row['fiat_currency']
                         )
-                        wallet_asset_pairs.append(wallet_asset_pair)
+                        asset_class_pairs.append(asset_class_pair)
                     except (KeyError, ValueError) as e:
                         print(f"⚠️  Skipping invalid row: {row} - Error: {e}")
                         continue
                         
-            print(f"✅ Loaded {len(wallet_asset_pairs)} wallet asset pairs from CSV")
-            return wallet_asset_pairs
+            print(f"✅ Loaded {len(asset_class_pairs)} asset class pairs from CSV")
+            return asset_class_pairs
             
         except Exception as e:
             print(f"❌ Error reading CSV file: {e}")
-            return wallet_asset_pairs
+            return asset_class_pairs
 
     # Load wallet asset pairs from CSV
-    csv_file_path = "wallet_asset_pairs.csv"
-    wallet_asset_pairs = load_wallet_asset_pairs_from_csv(csv_file_path)
+    csv_file_path = "asset_class_pairs.csv"
+    asset_class_pairs = load_asset_class_pairs_from_csv(csv_file_path)
     
-    if wallet_asset_pairs:
-        update_wallet_asset_fiat(wallet_asset_pairs)
+    if asset_class_pairs:
+        update_asset_class_fiat(asset_class_pairs)
     else:
-        print("❌ No wallet asset pairs loaded. Please check the CSV file.")
+        print("❌ No asset class pairs loaded. Please check the CSV file.")
