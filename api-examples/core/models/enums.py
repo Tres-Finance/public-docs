@@ -117,6 +117,7 @@ class Platform(CaseInsensitiveStrEnum):
     ASCENDEX = 'ascendex'
     DYDX = 'dydx'
     CELESTIA = 'celestia'
+    BITTENSOR = 'bittensor'
 
 class BalanceState(CaseInsensitiveStrEnum):
     LOCKED = 'locked'
