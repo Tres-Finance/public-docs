@@ -587,21 +587,6 @@ Each exchange requires specific API credentials:
 4. **Validate Exchange Data**: Verify data is correct in exchange system
 5. **Reconfigure Mapping**: Update mapping configuration as needed
 
-### Performance Issues
-
-#### **Issue: Slow Data Sync**
-**Symptoms:**
-- Sync takes longer than expected
-- Timeout errors during sync
-- Incomplete data synchronization
-
-**Solutions:**
-1. **Check Network Performance**: Monitor network latency to exchange
-2. **Review Data Volume**: Consider reducing data volume or frequency
-3. **Optimize Sync Schedule**: Adjust sync timing to off-peak hours
-4. **Check Exchange Performance**: Verify exchange API performance
-5. **Contact Support**: Escalate performance issues to TRES support
-
 ---
 
 ## Monitoring and Maintenance
