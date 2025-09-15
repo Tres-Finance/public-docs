@@ -2,13 +2,6 @@
 
 This documentation covers the Overview page tabs and the widgets within each tab, including background and product context so PMs, engineers, and users understand what it shows, why it matters, and how to use it.
 
-- Routes: `src/router/routes/index.ts` → `/overview/:id?`
-- Overview page: `src/pages/overview/OverviewPage.vue`
-- Tab controls: `src/pages/overview/overview-cards/top-section/OverviewTabs.vue`
-- Data API: `src/pages/overview/overview.api.ts`
-- GraphQL: `src/graphql/queries/overview.ts`
-
----
 
 ## Tabs overview and visibility
 
