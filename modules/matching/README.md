@@ -22,15 +22,13 @@ A transaction reconciliation system that matches sub-transactions between two or
   4) System processes all asset classes in parallel, trying each strategy sequentially
   5) Wait for completion (check Temporal UI or logs)
   6) Review matched transactions in database
-  7) Click "Run Complex Matching" to process remaining unmatched transactions
-  8) Configure complex parameters (delta_time_days, delta_amount, batch sizes)
-  9) System finds M-to-N matches using constraint programming
+  7) Configure complex parameters (delta_time_days, delta_amount, batch sizes)
+  8) Click "Run Complex Matching" to process remaining unmatched transactions
+  10) System finds M-to-N matches using constraint programming
 - **Result:** Transactions are grouped into match groups with metadata showing match quality
 - **Pitfalls:** 
   - Must run simple strategy BEFORE complex (complex only processes unmatched)
-  - Large date ranges can timeout; use 1-3 month chunks
   - Matched transactions won't be re-matched; delete match groups to retry
-  - Running complex before simple will miss obvious 1-to-1 matches
 
 ### Flow B — Custom Simple Matching (Advanced)
 - **When:** Need specific matching rules different from SIMPLE_STRATEGY
@@ -62,8 +60,8 @@ A transaction reconciliation system that matches sub-transactions between two or
   6) Review matches in Temporal UI logs
 - **Result:** Complex M-to-N matches (e.g., 3 subtxs from A match 2 subtxs from B)
 - **Pitfalls:**
-  - Computationally expensive; takes 5-30 minutes for 1-month periods
-  - May not find optimal global solution (processes in batches)
+  - Computationally expensive; can take 5-30 minutes 
+  - May not find optimal global solution
   - `delta_amount` too small finds no matches; too large creates poor matches
 
 ---
@@ -80,18 +78,17 @@ A transaction reconciliation system that matches sub-transactions between two or
 - **Before Range Hours** (default: 24)
   - How many hours BEFORE a subtx timestamp to search for matches
   - Example: `24` searches 1 day before; `48` searches 2 days before
-  - Increase if orgs have timezone differences or delayed reporting
+  - Increase if orgs have time differences or delayed reporting
 
 - **After Range Hours** (default: 24)
   - How many hours AFTER a subtx timestamp to search for matches
   - Example: `24` searches 1 day after; `0` only searches past
-  - Increase for settlement delays
+  - Increase if orgs have time differences or delayed reporting
 
 - **Use Same Identifier** (default: True)
   - Require matching on transaction hash/identifier
   - `True`: Only matches subtxs with same `tx.identifier` (very strict, high confidence)
   - `False`: Matches on amount/time only (more flexible, lower confidence)
-  - Use `True` for on-chain transactions with shared tx hashes
 
 ### Complex Matching Config (Dashboard Form)
 
@@ -161,9 +158,6 @@ Located in `matching/strategies.py`, this list defines 7 progressively looser st
 
 - **Q:** Should I use "Run Combined" button or run simple/complex separately?
   **A:** Run separately. Click "Run Simple Strategy" first to get comprehensive coverage with the 7 predefined strategies, then "Run Complex Matching" for remaining transactions. The "Run Combined" button uses single custom configs and is less effective.
-
-- **Q:** How long does matching take?
-  **A:** Simple strategy: 5-15 minutes for 1-month period. Complex matching: 10-45 minutes depending on unmatched transaction count. Check Temporal UI for progress.
 
 - **Q:** What's delta_amount vs delta_amount_in_usd?
   **A:** `delta_amount` is absolute token tolerance (e.g., 0.5 BTC). `delta_amount_in_usd` dynamically converts USD to tokens (e.g., $5 = 0.00008 BTC if BTC=$60k). Use USD for consistent tolerance across different token prices.
@@ -241,15 +235,6 @@ Located in `matching/strategies.py`, this list defines 7 progressively looser st
 - Activity timeouts: 5 minutes (simple), 30 minutes (complex)
 
 ### Errors & Troubleshooting
-
-| Exact Message | Likely Cause | Fix |
-|---|---|---|
-| Workflow timed out after 40 seconds | Too many subtxs to process in time | Reduce date range or increase batch sizes |
-| No solution found | Complex matching constraints too strict | Increase `delta_amount` or `delta_time` in config |
-| Invalid cursor progression | Pagination cursor not advancing | Check for duplicate IDs or database issues |
-| Reached maximum iterations limit | More than 1000 batches to process | Split date range into smaller periods |
-| No org A subtxs found for asset class | All subtxs already matched or outside date range | Check `match_group__isnull` filter or expand dates |
-| Siblings validation failed | Sibling subtxs amounts don't match within tolerance | Increase `delta_amount_rate` or check data quality |
 
 **Common Issues:**
 - **No matches found:** Check that both orgs have subtxs for same asset class, timestamps overlap within delta_time, and balance_factor matches.
