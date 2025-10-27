@@ -1,6 +1,6 @@
-# TRES Custodian Integration: Requirements and Setup Guide
+# TRES Custodian Integration: Complete Knowledge Base
 
-This guide explains what is required to connect custodians to TRES, including supported custodians, credential requirements, configuration steps, and the integration process.
+This comprehensive guide explains custodian integration in TRES, including supported custodians, credential requirements, configuration steps, user flows, and troubleshooting. This document serves as the primary knowledge base for the TRES-agent AI.
 
 ---
 
@@ -13,6 +13,8 @@ A **custodian** is a qualified financial institution that specializes in safegua
 - **Unified Portfolio View**: See all assets (custodial and non-custodial) in one place
 - **Compliance Reporting**: Generate reports that include custodial holdings
 - **Proof of Funds**: Provide evidence of custodial assets for compliance
+
+**Purpose:** Helps organizations maintain real-time visibility of their digital asset holdings across multiple custodial platforms without manual data entry or file uploads.
 
 ### Custodial vs Non-Custodial Assets
 
@@ -96,6 +98,99 @@ TRES currently supports integration with the following custodians:
 - Institutional custody
 - Compliance and audit needs
 
+### 6. **Fordefi**
+**Type**: Digital asset custody and security platform
+**Specialization**: Institutional custody with advanced security features
+
+**Data Types Available:**
+- **Vaults**: Custodial vault information and balances
+- **Wallets**: Wallet information and addresses
+
+**Use Cases:**
+- Security-focused institutions
+- Advanced multi-party authorization
+- Institutional custody requirements
+
+---
+
+## User Flows
+
+### Flow A — Automatic Daily Sync
+- **When:** The system runs automatically at scheduled intervals throughout the day
+- **Preconditions:** You've connected at least one supported custodian (Fireblocks, Coinbase Prime, Anchorage, Copper, BitGo, or Fordefi) with valid API credentials
+- **Steps:**
+  1) System retrieves your current holdings from the custodian
+  2) Data is validated and transformed into a consistent format
+  3) Your accounts, balances, and wallet information are updated automatically
+  4) Integration status changes from "Syncing" to "Completed"
+- **Result:** Your dashboard shows the latest balance and account information from your custodian without any action needed
+- **Pitfalls:**
+  - If API credentials expire or are revoked, the sync will fail and status shows "Failed"
+  - Large custodian accounts (thousands of wallets) may take longer to complete the first sync
+  - Archived or deleted wallets at the custodian may be removed from your view
+
+### Flow B — Monthly Proof of Funds (POF) Sync
+- **When:** Runs automatically on the 1st of each month (if enabled for your integration)
+- **Preconditions:** Your custodian integration has Proof of Funds enabled in its configuration
+- **Steps:**
+  1) System identifies all custodian integrations with POF enabled
+  2) Fetches a complete snapshot of holdings from each custodian
+  3) Applies any configured filters (e.g., only specific wallet types)
+  4) Stores the data for compliance and reporting purposes
+- **Result:** A dated snapshot of your assets is available for audits, reporting, or compliance needs
+- **Pitfalls:**
+  - POF sync may take longer than regular syncs if you have many holdings
+  - Filters must be configured correctly to capture the right accounts
+
+### Flow C — First-Time Integration Setup
+- **When:** You first connect a new custodian to the platform
+- **Preconditions:** You have admin access and valid API credentials from your custodian
+- **Steps:**
+  1) Provide custodian API credentials through the integration setup
+  2) Configure which data types to sync (vaults, wallets, transactions, etc.)
+  3) Choose how to organize the data (internal accounts, contacts, or annotations)
+  4) Initial sync begins automatically
+  5) Status shows "Syncing" until complete
+- **Result:** All your custodian holdings appear in the platform, organized according to your configuration
+- **Pitfalls:**
+  - Incorrect API credentials cause immediate failure—verify credentials with your custodian first
+  - Misconfigured data mapping may create accounts in unexpected locations
+  - Very large custodian accounts may take 15-30 minutes for the initial sync
+
+---
+
+## Quick Reference Q&A
+
+- **Q:** Which custodians are supported?  
+  **A:** Fireblocks, Coinbase Prime, Anchorage, Copper, BitGo, and Fordefi. Each requires separate API credentials and setup.
+
+- **Q:** How often does my data sync?  
+  **A:** Automatically throughout the day at regular intervals. You'll always see recent data without manual uploads.
+
+- **Q:** What happens if my sync fails?  
+  **A:** The integration status shows "Failed" and syncs stop. Common causes are expired credentials or network issues. Check your API credentials and connection, then retry.
+
+- **Q:** Can I manually trigger a sync?  
+  **A:** Typically syncs run automatically, but your support team can trigger a manual sync if needed for your specific integration.
+
+- **Q:** What data is imported from my custodian?  
+  **A:** Depends on your configuration, but typically includes: wallet/vault names, balances, asset types, addresses, and optionally transaction metadata.
+
+- **Q:** Will this delete or modify data in my custodian account?  
+  **A:** No. The sync only reads data from your custodian—it never writes, deletes, or modifies anything at the custodian.
+
+- **Q:** How do I know if a sync is running?  
+  **A:** Check your integration status. "Syncing" means in progress, "Completed" means finished successfully, "Failed" means an error occurred.
+
+- **Q:** What if I archive a wallet at my custodian?  
+  **A:** Archived wallets may be removed from your view during the next sync, depending on your configuration settings.
+
+- **Q:** Can I sync multiple custodians at once?  
+  **A:** Yes. Each custodian is a separate integration with its own sync schedule and configuration.
+
+- **Q:** How long does a sync take?  
+  **A:** Usually a few seconds to a few minutes. Very large accounts with thousands of wallets may take 15-30 minutes on the first sync, then faster on subsequent syncs.
+
 ---
 
 ## Integration Requirements
@@ -148,6 +243,12 @@ Each custodian requires specific API credentials:
 ```
 - API Key: BitGo API key
 - Additional credentials as required by BitGo
+```
+
+##### **Fordefi Requirements:**
+```
+- API Key: Fordefi API key
+- Additional credentials as required by Fordefi
 ```
 
 #### **Network Requirements**
@@ -212,6 +313,7 @@ Each custodian requires specific API credentials:
    - Anchorage
    - Copper
    - BitGo
+   - Fordefi
 
 #### **Enter Credentials:**
 1. **Integration Name**: Give your integration a descriptive name
@@ -285,6 +387,7 @@ Each custodian requires specific API credentials:
 | **Anchorage** | ✅ | ❌ | ❌ | ✅ |
 | **Copper** | ❌ | ✅ | ❌ | ❌ |
 | **BitGo** | ❌ | ✅ | ❌ | ❌ |
+| **Fordefi** | ✅ | ✅ | ❌ | ❌ |
 
 ### Data Type Configuration
 
@@ -328,6 +431,51 @@ Each custodian requires specific API credentials:
   "transaction_types": ["deposit", "withdrawal", "transfer"]
 }
 ```
+
+### How Data Is Organized
+
+Based on your configuration, custodian data maps to different objects:
+- **Internal Accounts:** Represent your own wallets/vaults in your account structure
+- **Contacts:** Represent external wallets or counterparties you interact with
+- **Transaction Comments:** Attach custodian metadata (notes, tags) to existing transactions
+- **Ignore:** Skip certain data types entirely if not needed
+
+### Data Import Details
+
+**What Gets Imported:**
+- Wallet and vault names, IDs, and hierarchies
+- Current asset balances for each account
+- Cryptocurrency types (Bitcoin, Ethereum, stablecoins, etc.)
+- Wallet addresses and deposit addresses
+- Optionally: transaction metadata like notes, tags, or descriptions
+
+**Limits:**
+- Syncs process data in batches for reliability
+- Very large accounts may take 15-30 minutes for initial sync
+- Subsequent syncs are faster because they only process changes
+- No hard limit on number of wallets, vaults, or assets
+
+---
+
+## Key Concepts
+
+- **Custodian:** A qualified financial institution (like Fireblocks or Coinbase Prime) that securely stores and manages your digital assets
+- **Custodial Holdings:** The crypto assets (tokens, coins) held by a custodian on your behalf
+- **Integration:** A configured connection between the platform and one of your custodian accounts using API credentials
+- **Sync Status:** The current state of your integration—either "Syncing" (in progress), "Completed" (successful), or "Failed" (error)
+- **Data Types:** Different categories of information from custodians—such as vaults, wallets, addresses, or transaction metadata
+
+### How Custodian Sync Works (High-Level)
+
+Custodian Sync automatically connects to your custodian platforms and imports your holdings into the system. When you set up a custodian integration, you provide API credentials that allow read-only access to your custodian data.
+
+The system runs scheduled syncs throughout the day. Each sync retrieves the latest data from your custodian, validates and standardizes it, then updates your accounts and balances. This three-step process ensures consistency regardless of which custodian you use.
+
+You can configure how different data types map into your system. For example, you might import custodian vaults as "Internal Accounts" so they appear in your account hierarchy, or import external wallets as "Contacts" so they're available for transaction categorization.
+
+The sync handles large custodian accounts efficiently by processing data in batches. If you have thousands of wallets or addresses, the system fetches and processes them in chunks to avoid timeouts. Syncs automatically resume if interrupted, so you never lose progress on large initial imports.
+
+Monthly Proof of Funds syncs provide compliance snapshots. If enabled, the system takes a complete inventory of your holdings on the first of each month and stores it for audit trails and regulatory reporting.
 
 ---
 
@@ -442,6 +590,17 @@ Each custodian requires specific API credentials:
 4. **Check Custodian Performance**: Verify custodian API performance
 5. **Contact Support**: Escalate performance issues to TRES support
 
+### Quick Reference Error Table
+
+| Status / Symptom | Likely Cause | Fix |
+|------------------|--------------|-----|
+| Status: "Failed" | Expired or invalid API credentials | Re-enter valid credentials in your integration settings and retry |
+| Status: "Syncing" for over 30 minutes | Very large account or network issue | Wait—first syncs can take time. If stuck after 1 hour, contact support |
+| Missing wallets or vaults | Custodian data is archived or filtered out | Check custodian to confirm wallets are active; review filter settings in configuration |
+| Status: "Failed" after working previously | Custodian API credentials revoked or changed | Verify credentials haven't expired; regenerate API keys at custodian if needed |
+| Balances don't match custodian | Sync hasn't completed yet or in progress | Wait for "Completed" status; refresh after sync finishes |
+| Duplicate accounts appearing | Multiple syncs or misconfiguration | Contact support to review and clean up configuration |
+
 ---
 
 ## Monitoring and Maintenance
@@ -539,10 +698,11 @@ Each custodian requires specific API credentials:
 
 Custodian integration in TRES provides:
 
-- **Automated Data Sync**: Seamless import of custodial holdings and transactions
+- **Automated Data Sync**: Seamless import of custodial holdings and transactions throughout the day
 - **Unified Portfolio View**: Complete view of all assets in one platform
-- **Compliance Support**: Built-in compliance and audit capabilities
-- **Enterprise Security**: Bank-grade security for sensitive financial data
-- **Scalable Solution**: Support for multiple custodians and growing portfolios
+- **Compliance Support**: Built-in compliance and audit capabilities including Proof of Funds
+- **Enterprise Security**: Bank-grade security for sensitive financial data with read-only access
+- **Scalable Solution**: Support for multiple custodians (Fireblocks, Coinbase Prime, Anchorage, Copper, BitGo, Fordefi) and growing portfolios
+- **Real-Time Visibility**: Maintain current holdings without manual data entry or file uploads
 
 By properly configuring custodian integration, you can ensure that your TRES platform provides a complete and accurate view of your digital asset portfolio, including both custodial and non-custodial holdings, while maintaining the highest security and compliance standards.
