@@ -12,15 +12,20 @@ Summarize many small sub-transactions into a single, clear entry per time interv
   1) New activity is collected from your connected platforms ("last synced" is updated).
   2) For each active rule, the system finds the time windows to process since the last run.
   3) It creates one rollup transaction per interval that had activity (e.g., Daily → one per day; Monthly → one per month).
-- **Result:** Your ledger shows clean summary entries per interval, replacing many tiny lines in reports while keeping totals intact.
+- **Result:** Your ledger shows clean summary entries per interval, labeled as `Rollup Tx`, replacing many tiny lines in reports while keeping totals intact.
 - **Pitfalls:** If a wallet hasn’t synced yet, that window won’t roll up; empty intervals produce no rollup for that interval.
 
-### Flow B — On‑demand rollup (after backfill or fixes)
-- **When:** After importing historical data, fixing classifications, or correcting balances, you may request a manual run.
-- **Preconditions:** The relevant rule is active and the wallet/platform has finished syncing.
-- **Steps:** 1) Trigger a rollup run. 2) Wait for it to finish. 3) Review the newly created summary entries per interval.
-- **Result:** Up‑to‑date rollup entries appear for the affected intervals.
-- **Pitfalls:** Triggering before sync completes can miss new data; make sure the cutoff time and timezone meet your reporting needs.
+### Flow B — Configure a Rollup Rule (UI)
+- **When:** You want to set up a new rollup for your organization.
+- **Preconditions:** You have access to the TRES dashboard and permissions to manage automations.
+- **Steps:**
+  1) Go to **Automations** in the left navigation.
+  2) Click **Add automation**.
+  3) Choose **Create rollup**.
+  4) Configure the rule: interval (Daily/Monthly), direction (Inflow/Outflow), asset, platform, internal account, cutoff time, and any optional filters (amount range, identifiers, method_ids, fees, exclude flags).
+  5) Save.
+- **Result:** A new Rollup Rule is added to your organization. It will run on schedule, and you can also trigger a manual run when needed.
+- **Pitfalls:** Ensure the target wallet/platform is connected and has completed a recent sync; otherwise the first run will wait for "last synced".
 
 ---
 
@@ -90,9 +95,3 @@ Summarize many small sub-transactions into a single, clear entry per time interv
 - **Limits**
   - One rollup per interval per rule (only when activity exists in that interval).
   - First‑time runs require synced data; without a last‑synced timestamp, the system waits until your first sync completes.
-
-### Errors & Troubleshooting
-| Exact Message | Likely Cause | Fix |
-|---|---|---|
-| "No last synced for platform" | The connected wallet/platform hasn’t finished an initial sync | Complete a data sync, then rollup will resume on the next run |
-| "No sub_transactions found for rule" | There was no qualifying activity during the window | This is informational; nothing to do. Add data or adjust rule scope if needed |
