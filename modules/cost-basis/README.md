@@ -32,6 +32,29 @@ Cost basis is the original value of an asset for tax purposes, used to calculate
    - **MAX_GAINS** (Maximize Gains)
    - **MAX_LOSSES** (Maximize Losses)
 
+#### Step 2a: Configure Different Strategies by Date Range (Optional)
+Use date ranges when you want to apply different strategies during different periods (for example, maximize gains in late 2024 and maximize losses in early 2025).
+
+1. In the same Cost Basis Configuration area, click "Add Cost Basis Range".
+2. For each range, set:
+   - Strategy: choose one of the methods listed above
+   - Start date
+   - End date
+3. Click "Save Settings" when done. The system will recalculate cost basis for the affected periods.
+
+Example setup:
+- Sep 1, 2024 – Jan 31, 2025 → Strategy: MAX_GAINS
+- Feb 1, 2025 – Jun 30, 2026 → Strategy: MAX_LOSSES
+
+Behavior and rules:
+- Ranges cannot overlap; the UI prevents overlapping date ranges.
+- Dates are interpreted in your organization’s time zone.
+  - Start date is inclusive from 00:00.
+  - End date is inclusive through 23:59:59.
+- If no range covers a transaction date, the global `cost_basis_strategy` is used as a fallback.
+- Editing ranges triggers a recalculation; large datasets may take time to reprocess.
+- If "Calculate Cost Basis by Internal Account" is enabled, ranges apply within each internal account’s calculation scope.
+
 #### Step 3: Configure Additional Settings
 1. **Calculate Cost Basis by Internal Account**: Enable if you want separate cost basis calculations per internal account
 2. **Calculate Cost Basis for Currencies**: Select which currencies to use for cost basis calculations
