@@ -78,4 +78,14 @@ All rules support email and Slack delivery. You can use one or both channels per
 
 Note: Thresholds, time ranges, units, recipients, and channels are configurable per rule. For example, you can set TX_ACTIVITY to “over $10,000 USD in the last 30 days” for a specific internal account, while EXPOSURE_TO_ASSET could be “over 20% in Stablecoins” measured by percent, for the whole organization.
 
+
+### Getting Started
+1) Choose your rules
+- Select which rules should be active and define thresholds (for example, amount, percent, or deviation).
+- Add filters as needed (specific accounts, asset classes, or currencies).
+
+2) Pick delivery channels
+- Select email, Slack, or both for each rule. For slack channels, you should setup integration first.
+- Map recipients (people, roles, or Slack channels).
+
 ---
