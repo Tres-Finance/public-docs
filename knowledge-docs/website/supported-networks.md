@@ -1,0 +1,335 @@
+# Supported networks, exchanges, custodians and platforms
+
+Source: https://tres.finance/networks/ (per-network pages under https://tres.finance/network/<slug>/)
+
+TRES supports 220+ Web3 networks, exchanges, and banking sources. Platforms with a dedicated integration page on tres.finance:
+
+- Abstract
+- Acala Network
+- Adi
+- Agoric
+- Akash
+- Aleo
+- Algorand
+- Allora
+- Anchorage
+- Anchorage Digital
+- Anime
+- Aptos
+- Aquanow
+- Arbitrum
+- Arbitrum Nova
+- Archway
+- Arweave
+- AscendEX
+- AssetMantle
+- Astar
+- Astar ZK EVM
+- Aurora
+- Avail
+- Avalanche
+- Avalanche - C Chain
+- Avalanche - P Chain
+- Axelar
+- Babylon
+- BackPack
+- Band
+- Bank Hapoalim Biz
+- Bank Hapoalim International
+- Bank of America
+- Banque Populaire Rives De Paris
+- Beam
+- Berachain
+- Binance Derivatives
+- Binance Exchange
+- Binance Exchange Turkey
+- Binance Smart Chain
+- Bitcanna
+- Bitcoin
+- Bitcoin Cash
+- Bitcoin Suisse
+- Bitcoin SV
+- Bitfinex
+- Bitget
+- BitGo
+- Bitlayer
+- BitMex
+- Bitso
+- Bitsong
+- Bitstamp
+- Bittensor
+- Bitvavo
+- BIX
+- Blast
+- Brex
+- Bullish
+- Bybit
+- Calamari
+- Camp
+- Canto
+- Canton
+- Cardano
+- Casper
+- Ceffu
+- Celestia
+- Celo
+- Centrifuge
+- Chainflip
+- Chase
+- Cheqd
+- Chihuahua
+- Chiliz
+- Circle
+- Citrea
+- Cobo
+- Coinbase Commerce
+- Coinbase Exchange
+- Coinbase Prime
+- Coinbase Retail
+- Coinbase: Base
+- Comdex
+- Concordium
+- Copper
+- Core DAO
+- Coreum
+- Corn
+- Cosmos
+- COTI
+- Crescent
+- Cronos
+- Crypto.com
+- Crypto.org
+- Customers Bank
+- Dash
+- Deribit
+- Desmos
+- DigiByte
+- Dogechain
+- Dogecoin
+- dYdX Chain
+- dYdX Exchange
+- Dynamic
+- EigenLayer
+- Emerald
+- Emoney
+- Energy Web
+- EOS
+- Equals Money
+- Ethereum
+- Ethereum Classic
+- Ethereum2
+- Etherlink
+- Evmos
+- FalconX
+- Fantom
+- Fetch.AI
+- Fidelity
+- Fifth Third Bank
+- Filecoin
+- Fireblocks
+- Flare
+- Flow
+- Flow EVM
+- Fogo
+- Fordefi
+- Fraxtal
+- Fuse.FI
+- Gate.io
+- Gemini
+- Gensyn
+- Gnosis Chain
+- Gravity Bridge
+- Haqq
+- Harmony
+- Hedera
+- Horizen
+- HTX
+- HyperEVM
+- Hyperliquid
+- Icon
+- Immutable ZK EVM
+- ImmutableX
+- Initia
+- Injective
+- Ink
+- Interlay
+- Internet Computer
+- IOST
+- IOTA
+- IOTA EVM
+- IOTEX
+- Irisnet
+- Juno
+- Kadena
+- Kaia
+- Karak
+- Karura
+- Kaspa
+- Katana
+- Kava
+- Kava EVM
+- Ki Chain
+- Kima
+- Kintsugi
+- Kraken
+- Kraken Custody
+- Krest
+- Kroma
+- Kucoin
+- Kujira
+- Kusama
+- Kyve
+- Lava
+- Layer 1 - BVNK
+- Layer One
+- LikeCoin
+- Linea
+- Lisk
+- Litecoin
+- Livepeer
+- LMAX
+- Lum
+- Manta Atlantic
+- Manta Pacific
+- Mantle Asset
+- Mantra
+- Manual
+- Mars
+- Mayachain
+- MegaETH
+- Meow
+- Meow Treasury
+- Mercury
+- Mercury Treasury
+- Metis
+- Milkyway
+- Mina
+- Mixnet
+- MODE
+- Monad
+- Moonbeam
+- Moonriver
+- Morgan Stanley
+- MultiversX
+- Nano
+- Near
+- Neo
+- Neon EVM
+- NEOX
+- Nervos
+- Neutron
+- Nillion
+- Noble
+- Nonco
+- NYM
+- Oasis Emerald
+- OKX
+- OmniFlix
+- Onomy
+- Ontology
+- OpBNB
+- Optimism
+- Osmosis
+- Palm
+- Passage
+- Paxful
+- Peaq
+- Pendulum
+- Persistence
+- Plasma
+- Plume
+- Polkadot
+- Polygon
+- Polygon zkEVM
+- Provenance
+- Qredo
+- Qtum
+- Quai
+- Quasar
+- Quicksilver
+- Radix
+- Ravencoin
+- Regen
+- Revolut Fr
+- Revolut Uk
+- Ripple
+- Ripple EVM
+- River & Towns
+- Ronin
+- Rootstock
+- Saga
+- Scroll
+- Secret
+- Sei EVM
+- Sei Network
+- Sentinel
+- Shentu
+- Shiden
+- Shiden EVM
+- Shyft
+- Sifchain
+- Skale
+- Skale Calypso Hub
+- Skale Nebula Hub
+- Solana
+- Sommelier
+- Somnia
+- Soneium
+- Songbird
+- Sonic
+- Sophon
+- Stable
+- Stacks
+- Stargaze
+- Starknet
+- Stellar
+- Story
+- Stride
+- Sui
+- Supra
+- Svb Go
+- Svb Online
+- Swell Chain
+- Sygnum
+- Symbol Network
+- Syscoin
+- Tac
+- Talos
+- Telegram Open Network
+- Tempo
+- Terra
+- Terra Classic
+- Tezos
+- The graph
+- Theta
+- Thorchain
+- Tron
+- Umee
+- Unichain
+- Vana
+- Vanar
+- Vara
+- Vaulta
+- VeChain
+- VeChainEVM
+- Vega
+- Verge
+- Vertex
+- VNX
+- WAX
+- Wemix
+- Whitebit
+- Wintermute
+- Wise
+- World Chain
+- Xai
+- XDC EVM
+- Xion
+- Zcash
+- ZeroG
+- ZetaChain
+- Zilliqa
+- zkEVM
+- zkSync
+- Zksync Era
+- Zora
