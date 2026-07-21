@@ -18,6 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Fine-grained PAT (contents + pull-requests write on public-docs)
+          # so the pushed branch and PR are authored by a real identity. A PR
+          # authored by the default GITHUB_TOKEN holds the knowledge-docs-checks
+          # gate as action_required (never auto-runs), which would stall
+          # auto-merge; a PAT-authored PR triggers the gate normally.
+          token: ${{ secrets.SYNC_GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -59,4 +66,4 @@ jobs:
           fi
           gh pr merge "$PR_URL" --auto --squash
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.SYNC_GITHUB_TOKEN }}
