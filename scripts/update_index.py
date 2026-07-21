@@ -58,3 +58,57 @@ def update_index(index_text: str, slugs: list[str], summaries: dict[str, str]) -
     trailing = index_text[end:]
     prefix = index_text[:start]
     return prefix + new_section + ("\n" + trailing.lstrip("\n") if trailing else "")
+
+
+import json
+import os
+import urllib.request
+
+MODEL = "claude-opus-4-8"
+_MAX_SUMMARY_CHARS = 200
+_PROMPT = (
+    "Write a single-line, information-dense summary (one sentence, no leading label, "
+    "no markdown) of this help-center article, matching the style of a docs index. "
+    "Name the concrete features/steps it covers. Article:\n\n{body}"
+)
+
+
+def mechanical_summary(article_text: str) -> str:
+    for line in article_text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("Source:"):
+            continue
+        text = stripped.lstrip("#").strip()
+        if text:
+            return text[:_MAX_SUMMARY_CHARS]
+    return ""
+
+
+def _call_anthropic(prompt: str) -> str:
+    body = json.dumps({
+        "model": MODEL,
+        "max_tokens": 256,
+        "messages": [{"role": "user", "content": prompt}],
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages",
+        data=body,
+        method="POST",
+        headers={
+            "x-api-key": os.environ["ANTHROPIC_API_KEY"],
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310 (https only)
+        payload = json.loads(resp.read().decode("utf-8"))
+    return payload["content"][0]["text"]
+
+
+def generate_summary(article_text: str, call=_call_anthropic) -> str:
+    prompt = _PROMPT.format(body=article_text)
+    try:
+        text = (call(prompt) or "").strip().splitlines()[0].strip()
+    except Exception:
+        text = ""
+    return text[:_MAX_SUMMARY_CHARS] if text else mechanical_summary(article_text)
