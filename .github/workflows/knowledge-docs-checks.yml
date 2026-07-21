@@ -1,0 +1,39 @@
+name: knowledge-docs-checks
+
+on:
+  pull_request:
+    paths:
+      - "knowledge-docs/**"
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Collect changed files under knowledge-docs/
+        id: diff
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          CHANGED="$(git diff --name-only "$BASE" "$HEAD" -- 'knowledge-docs/**')"
+          echo "$CHANGED"
+          printf '%s\n' "$CHANGED" > /tmp/changed.txt
+
+      - name: Secret/PII scan + md-only gate
+        run: |
+          set -euo pipefail
+          mapfile -t FILES < /tmp/changed.txt
+          # drop empty lines
+          FILTERED=()
+          for f in "${FILES[@]}"; do [ -n "$f" ] && FILTERED+=("$f"); done
+          python3 scripts/ci_checks.py --changed "${FILTERED[@]}"
