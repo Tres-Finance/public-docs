@@ -57,7 +57,12 @@ jobs:
           git switch -c "$BRANCH"
           git add knowledge-docs/
           git commit -m "chore(help-center): scheduled corpus sync"
-          git push --force-with-lease origin "$BRANCH"
+          # Plain --force (not --force-with-lease): this branch is bot-owned and
+          # runs are serialized by the concurrency group, so there is no
+          # concurrent writer to clobber. --force-with-lease fails from a fresh
+          # checkout (no remote-tracking ref) when a same-named branch lingers
+          # from a prior merged PR.
+          git push --force origin "$BRANCH"
           OWNER="${GITHUB_REPOSITORY%%/*}"
           # Use the REST + GraphQL API directly (not `gh pr create`/`gh pr merge`):
           # on a fork, gh resolves the upstream parent to detect cross-fork PR
