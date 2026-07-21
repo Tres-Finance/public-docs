@@ -1,9 +1,12 @@
 name: knowledge-docs-checks
 
 on:
+  # Runs on EVERY PR (no path filter) so the required `checks` status is
+  # always reported — a path-filtered required check would never run on a
+  # non-knowledge-docs PR, blocking it from merging forever. The job below
+  # already scopes its scan to knowledge-docs/ changes and passes cleanly
+  # (empty scan) when a PR touches nothing under knowledge-docs/.
   pull_request:
-    paths:
-      - "knowledge-docs/**"
 
 permissions:
   contents: read
