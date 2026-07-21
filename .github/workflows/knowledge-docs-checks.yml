@@ -13,6 +13,13 @@ permissions:
 
 jobs:
   checks:
+    # GitHub-hosted (not self-hosted): this is a pull_request workflow on a
+    # PUBLIC repo, so running it on Tres self-hosted runners would let a fork
+    # PR execute untrusted code on internal infra. It only reads public repo
+    # content + runs a local scan (no authenticated org write), so the org IP
+    # allow list does not block it. VERIFY on the canonical repo that this runs
+    # green; if the allow list blocks GitHub-hosted checkout, coordinate a
+    # self-hosted option WITH fork-PR approval controls before switching.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
