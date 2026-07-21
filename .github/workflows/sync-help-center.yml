@@ -58,15 +58,21 @@ jobs:
           git add knowledge-docs/
           git commit -m "chore(help-center): scheduled corpus sync"
           git push --force-with-lease origin "$BRANCH"
-          PR_URL="$(gh pr list --head "$BRANCH" --json url --jq '.[0].url')"
-          if [ -z "$PR_URL" ]; then
-            PR_URL="$(gh pr create --base main --head "$BRANCH" \
-              --title "chore(help-center): scheduled corpus sync" \
-              --body "Automated help-center sync. Merges automatically once knowledge-docs-checks passes.")"
+          OWNER="${GITHUB_REPOSITORY%%/*}"
+          # Use the REST + GraphQL API directly (not `gh pr create`/`gh pr merge`):
+          # on a fork, gh resolves the upstream parent to detect cross-fork PR
+          # options, which can hit the parent org's IP allow list. REST scoped to
+          # THIS repo never touches the parent, and works identically on the
+          # canonical (non-fork) repo.
+          PR_NODE="$(gh api "repos/$GITHUB_REPOSITORY/pulls?head=$OWNER:$BRANCH&base=main&state=open" --jq '.[0].node_id // empty')"
+          if [ -z "$PR_NODE" ]; then
+            PR_NODE="$(gh api -X POST "repos/$GITHUB_REPOSITORY/pulls" \
+              -f title="chore(help-center): scheduled corpus sync" \
+              -f head="$BRANCH" -f base="main" \
+              -f body="Automated help-center sync. Merges automatically once the knowledge-docs checks pass." \
+              --jq '.node_id')"
           fi
-          gh pr merge "$PR_URL" --auto --squash
+          gh api graphql -f query='mutation($id:ID!){enablePullRequestAutoMerge(input:{pullRequestId:$id,mergeMethod:SQUASH}){pullRequest{number}}}' -F id="$PR_NODE"
         env:
           GH_TOKEN: ${{ secrets.SYNC_GITHUB_TOKEN }}
-          # Pin all gh pr operations to THIS repo. On a fork, gh pr create
-          # otherwise defaults the base to the upstream parent.
           GH_REPO: ${{ github.repository }}
