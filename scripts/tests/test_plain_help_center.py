@@ -1,5 +1,6 @@
 from scripts.plain_help_center import Article, parse_sitemap
 from scripts.plain_help_center import SyncPlan, diff_sitemap, anchor_payload
+from scripts.plain_help_center import article_filename, render_article
 
 SITEMAP = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -56,3 +57,12 @@ def test_anchor_payload_shape():
     assert payload["generated_at"] == "2026-07-21T00:00:00Z"
     assert list(payload["articles"].keys()) == ["a", "b"]  # sorted
     assert payload["articles"]["a"] == {"url": A_OLD.url, "lastmod": A_OLD.lastmod}
+
+
+def test_article_filename():
+    assert article_filename("1099-form-generation") == "article-1099-form-generation.md"
+
+
+def test_render_article_prepends_source_and_normalizes_trailing_ws():
+    out = render_article("https://help.tres.finance/article/a", "# Title\n\nBody\n\n\n")
+    assert out == "Source: https://help.tres.finance/article/a\n\n# Title\n\nBody\n"

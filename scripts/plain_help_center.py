@@ -68,3 +68,22 @@ def anchor_payload(articles: list[Article], generated_at: str) -> dict:
             for a in sorted(articles, key=lambda a: a.slug)
         },
     }
+
+
+import urllib.request
+
+
+def article_filename(slug: str) -> str:
+    return f"article-{slug}.md"
+
+
+def render_article(url: str, native_md: str) -> str:
+    return f"Source: {url}\n\n{native_md.strip()}\n"
+
+
+def fetch_text(url: str, timeout: int = 30) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": "tres-help-center-sync"})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310 (https only)
+        if resp.status != 200:
+            raise RuntimeError(f"GET {url} returned {resp.status}")
+        return resp.read().decode("utf-8")
