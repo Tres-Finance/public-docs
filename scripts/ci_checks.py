@@ -13,7 +13,12 @@ _SECRET_PATTERNS = {
     "generic_secret": re.compile(
         r"(?i)(secret|password|api[_-]?key|token)\s*[:=]\s*['\"][^'\"]{8,}['\"]"
     ),
-    "private_ip": re.compile(r"\b(10|127|192\.168|172\.(1[6-9]|2[0-9]|3[01]))\."),
+    # Full dotted-quad only — must not match prose like "10. Reporting".
+    "private_ip": re.compile(
+        r"\b(?:10|127)\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"
+        r"|\b192\.168\.\d{1,3}\.\d{1,3}\b"
+        r"|\b172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}\b"
+    ),
 }
 
 _KNOWLEDGE_PREFIX = "knowledge-docs/"

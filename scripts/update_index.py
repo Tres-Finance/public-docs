@@ -1,4 +1,9 @@
+import glob
+import json
+import os
 import re
+import sys
+import urllib.request
 
 HELP_CENTER_HEADER = "## help-center"
 _SECTION_RE = re.compile(r"(?m)^## .+$")
@@ -60,10 +65,6 @@ def update_index(index_text: str, slugs: list[str], summaries: dict[str, str]) -
     return prefix + new_section + ("\n" + trailing.lstrip("\n") if trailing else "")
 
 
-import json
-import os
-import urllib.request
-
 MODEL = "claude-opus-4-8"
 _MAX_SUMMARY_CHARS = 200
 _PROMPT = (
@@ -107,14 +108,21 @@ def _call_anthropic(prompt: str) -> str:
 
 def generate_summary(article_text: str, call=_call_anthropic) -> str:
     prompt = _PROMPT.format(body=article_text)
+    reason = ""
     try:
-        text = (call(prompt) or "").strip().splitlines()[0].strip()
-    except Exception:
+        raw = (call(prompt) or "").strip().splitlines()
+        text = raw[0].strip() if raw else ""
+        if not text:
+            reason = "empty model result"
+    except Exception as e:
         text = ""
-    return text[:_MAX_SUMMARY_CHARS] if text else mechanical_summary(article_text)
+        reason = f"{type(e).__name__}: {e}"
 
+    if text:
+        return text[:_MAX_SUMMARY_CHARS]
 
-import glob
+    print(f"warning: summary fallback for article ({reason})", file=sys.stderr)
+    return mechanical_summary(article_text) or "(no summary)"
 
 
 def apply_to_index_file(index_path, content_dir, changed_slugs, summarize=generate_summary):

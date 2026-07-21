@@ -1,6 +1,9 @@
+import json as _json
+
 from scripts.plain_help_center import Article, parse_sitemap
 from scripts.plain_help_center import SyncPlan, diff_sitemap, anchor_payload
 from scripts.plain_help_center import article_filename, render_article
+from scripts.plain_help_center import SyncResult, load_anchor, sync
 
 SITEMAP = """<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -68,8 +71,17 @@ def test_render_article_prepends_source_and_normalizes_trailing_ws():
     assert out == "Source: https://help.tres.finance/article/a\n\n# Title\n\nBody\n"
 
 
-import json as _json
-from scripts.plain_help_center import SyncResult, sync
+def test_load_anchor_missing_file_returns_empty(tmp_path):
+    assert load_anchor(str(tmp_path / "nope.json")) == {}
+
+
+def test_load_anchor_present_returns_articles_map(tmp_path):
+    anchor_path = tmp_path / ".sync-state.json"
+    articles = {"a": {"url": "u", "lastmod": "1"}}
+    anchor_path.write_text(
+        _json.dumps({"generated_at": "OLD", "articles": articles}), encoding="utf-8"
+    )
+    assert load_anchor(str(anchor_path)) == articles
 
 
 def test_sync_writes_deletes_and_rewrites_anchor(tmp_path):
@@ -91,3 +103,34 @@ def test_sync_writes_deletes_and_rewrites_anchor(tmp_path):
     assert not (content / "article-old.md").exists()
     saved = _json.loads(anchor_path.read_text(encoding="utf-8"))
     assert list(saved["articles"].keys()) == ["a"]
+
+
+def test_sync_warm_no_change_does_not_touch_anchor(tmp_path):
+    content = tmp_path / "help-center"
+    content.mkdir()
+    anchor_path = tmp_path / ".sync-state.json"
+    # Pre-existing anchor with a stale generated_at that must NOT be rewritten.
+    original_bytes = b'{"articles": {"a": {"lastmod": "1", "url": "u"}}, "generated_at": "OLD"}\n'
+    anchor_path.write_bytes(original_bytes)
+
+    articles = [Article("a", "u", "1")]
+    anchor = {"a": {"url": "u", "lastmod": "1"}}
+    result = sync(str(content), str(anchor_path), articles, anchor,
+                  fetch=lambda u, timeout=30: "", now="2026-07-21T00:00:00Z")
+
+    assert result == SyncResult(added=[], changed=[], deleted=[])
+    assert anchor_path.read_bytes() == original_bytes
+
+
+def test_sync_warm_no_change_does_not_create_anchor(tmp_path):
+    content = tmp_path / "help-center"
+    content.mkdir()
+    anchor_path = tmp_path / ".sync-state.json"
+
+    articles = [Article("a", "u", "1")]
+    anchor = {"a": {"url": "u", "lastmod": "1"}}
+    result = sync(str(content), str(anchor_path), articles, anchor,
+                  fetch=lambda u, timeout=30: "", now="2026-07-21T00:00:00Z")
+
+    assert result == SyncResult(added=[], changed=[], deleted=[])
+    assert not anchor_path.exists()

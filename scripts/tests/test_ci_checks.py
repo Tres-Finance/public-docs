@@ -23,6 +23,12 @@ def test_scan_flags_pem_and_private_ip():
     assert "private_ip" in names
 
 
+def test_scan_does_not_flag_ordinary_numbered_list():
+    assert scan_secrets("### 10. Reporting\n\n10. Share with team") == []
+    assert "private_ip" in scan_secrets("connect to 192.168.1.1")
+    assert "private_ip" not in scan_secrets("it costs 10.50 dollars")
+
+
 def test_allowed_paths_accepts_md_index_and_anchor():
     paths = [
         "knowledge-docs/help-center/article-a.md",

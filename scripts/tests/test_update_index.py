@@ -1,4 +1,5 @@
 from scripts.update_index import (
+    apply_to_index_file,
     generate_summary,
     mechanical_summary,
     parse_help_center_bullets,
@@ -58,6 +59,47 @@ def test_update_index_drops_removed_slug():
     assert "- [article-a](help-center/article-a.md): Old summary for A." in out
 
 
+def test_update_index_preserves_non_help_center_section_byte_for_byte():
+    out = update_index(
+        INDEX,
+        slugs=["a", "b"],
+        summaries={"a": "Fresh summary for A."},
+    )
+    assert out.split("## website")[1] == INDEX.split("## website")[1]
+
+
+INDEX_HC_LAST = """# Tres Finance Knowledge Docs
+
+## product-docs
+
+> Product docs
+
+- [dashboard/accounts](product-docs/dashboard/accounts.md): Accounts page.
+
+## help-center
+
+> Customer help center articles
+
+- [article-a](help-center/article-a.md): Old summary for A.
+- [article-b](help-center/article-b.md): Summary for B.
+"""
+
+
+def test_update_index_help_center_is_last_section():
+    out = update_index(
+        INDEX_HC_LAST,
+        slugs=["a", "b"],
+        summaries={"a": "Fresh summary for A."},
+    )
+    assert "- [article-a](help-center/article-a.md): Fresh summary for A." in out
+    assert "- [article-b](help-center/article-b.md): Summary for B." in out
+    # Exactly one trailing newline — nothing dropped or appended at EOF.
+    assert out.endswith("Summary for B.\n")
+    assert not out.endswith("\n\n")
+    # Section above help-center preserved unchanged.
+    assert out.split("## help-center")[0] == INDEX_HC_LAST.split("## help-center")[0]
+
+
 ARTICLE = "Source: https://help.tres.finance/article/a\n\n# 1099 Form Generation\n\nForm 1099-MISC reports income.\n"
 
 
@@ -76,7 +118,21 @@ def test_generate_summary_falls_back_on_error():
     assert generate_summary(ARTICLE, call=boom) == "1099 Form Generation"
 
 
-from scripts.update_index import apply_to_index_file
+def test_generate_summary_warns_on_exception_fallback(capsys):
+    def boom(prompt):
+        raise RuntimeError("boom")
+    generate_summary(ARTICLE, call=boom)
+    assert "fallback" in capsys.readouterr().err
+
+
+def test_generate_summary_warns_on_empty_result_fallback(capsys):
+    generate_summary(ARTICLE, call=lambda prompt: "")
+    assert "fallback" in capsys.readouterr().err
+
+
+def test_generate_summary_never_returns_empty():
+    empty_article = "Source: https://help.tres.finance/article/x\n\n"
+    assert generate_summary(empty_article, call=lambda prompt: "") == "(no summary)"
 
 
 def test_apply_to_index_file_reads_disk_and_summarizes_changed(tmp_path):

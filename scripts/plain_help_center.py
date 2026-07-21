@@ -1,7 +1,10 @@
 import json
 import os
 import re
+import sys
+import urllib.request
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 SITEMAP_URL = "https://help.tres.finance/sitemap.xml"
 _ARTICLE_PREFIX = "https://help.tres.finance/article/"
@@ -70,9 +73,6 @@ def anchor_payload(articles: list[Article], generated_at: str) -> dict:
     }
 
 
-import urllib.request
-
-
 def article_filename(slug: str) -> str:
     return f"article-{slug}.md"
 
@@ -87,9 +87,6 @@ def fetch_text(url: str, timeout: int = 30) -> str:
         if resp.status != 200:
             raise RuntimeError(f"GET {url} returned {resp.status}")
         return resp.read().decode("utf-8")
-
-
-from datetime import datetime, timezone
 
 
 @dataclass(frozen=True)
@@ -116,15 +113,17 @@ def sync(content_dir, anchor_path, articles, anchor, fetch=fetch_text, now="") -
         if os.path.exists(path):
             os.remove(path)
 
-    with open(anchor_path, "w", encoding="utf-8") as f:
-        json.dump(anchor_payload(articles, now), f, indent=2, sort_keys=True)
-        f.write("\n")
+    # Only rewrite the anchor when something actually changed — otherwise a
+    # no-change run would churn generated_at and produce a no-op PR every week.
+    if added or changed or plan.to_delete:
+        with open(anchor_path, "w", encoding="utf-8") as f:
+            json.dump(anchor_payload(articles, now), f, indent=2, sort_keys=True)
+            f.write("\n")
 
     return SyncResult(added=sorted(added), changed=sorted(changed), deleted=sorted(plan.to_delete))
 
 
 def main(argv=None) -> int:
-    import sys
     content_dir = "knowledge-docs/help-center"
     anchor_path = os.path.join(content_dir, ".sync-state.json")
     articles = parse_sitemap(fetch_text(SITEMAP_URL))
