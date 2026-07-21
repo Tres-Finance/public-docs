@@ -74,3 +74,22 @@ def test_generate_summary_falls_back_on_error():
     def boom(prompt):
         raise RuntimeError("529 overloaded")
     assert generate_summary(ARTICLE, call=boom) == "1099 Form Generation"
+
+
+from scripts.update_index import apply_to_index_file
+
+
+def test_apply_to_index_file_reads_disk_and_summarizes_changed(tmp_path):
+    hc = tmp_path / "help-center"
+    hc.mkdir()
+    (hc / "article-a.md").write_text("Source: u\n\n# A New\n\nbody\n", encoding="utf-8")
+    (hc / "article-c.md").write_text("Source: u\n\n# C Title\n\nbody\n", encoding="utf-8")
+    index = tmp_path / "index.md"
+    index.write_text(INDEX, encoding="utf-8")
+
+    apply_to_index_file(str(index), str(hc), changed_slugs=["a", "c"],
+                        summarize=lambda text: "S:" + text.splitlines()[2].lstrip("# "))
+    out = index.read_text(encoding="utf-8")
+    assert "- [article-a](help-center/article-a.md): S:A New" in out
+    assert "- [article-c](help-center/article-c.md): S:C Title" in out
+    assert "article-b" not in out  # b has no file on disk -> dropped

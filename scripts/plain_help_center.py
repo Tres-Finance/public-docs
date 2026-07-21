@@ -121,3 +121,22 @@ def sync(content_dir, anchor_path, articles, anchor, fetch=fetch_text, now="") -
         f.write("\n")
 
     return SyncResult(added=sorted(added), changed=sorted(changed), deleted=sorted(plan.to_delete))
+
+
+def main(argv=None) -> int:
+    import sys
+    content_dir = "knowledge-docs/help-center"
+    anchor_path = os.path.join(content_dir, ".sync-state.json")
+    articles = parse_sitemap(fetch_text(SITEMAP_URL))
+    anchor = load_anchor(anchor_path)
+    result = sync(content_dir, anchor_path, articles, anchor)
+    json.dump(
+        {"added": result.added, "changed": result.changed, "deleted": result.deleted},
+        sys.stdout,
+    )
+    sys.stdout.write("\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

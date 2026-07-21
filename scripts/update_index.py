@@ -112,3 +112,24 @@ def generate_summary(article_text: str, call=_call_anthropic) -> str:
     except Exception:
         text = ""
     return text[:_MAX_SUMMARY_CHARS] if text else mechanical_summary(article_text)
+
+
+import glob
+
+
+def apply_to_index_file(index_path, content_dir, changed_slugs, summarize=generate_summary):
+    files = sorted(glob.glob(os.path.join(content_dir, "article-*.md")))
+    slugs = [os.path.basename(p)[len("article-"):-len(".md")] for p in files]
+    by_slug = {s: p for s, p in zip(slugs, files)}
+
+    summaries = {}
+    for slug in changed_slugs:
+        if slug in by_slug:
+            with open(by_slug[slug], encoding="utf-8") as f:
+                summaries[slug] = summarize(f.read())
+
+    with open(index_path, encoding="utf-8") as f:
+        index_text = f.read()
+    new_text = update_index(index_text, slugs, summaries)
+    with open(index_path, "w", encoding="utf-8") as f:
+        f.write(new_text)
