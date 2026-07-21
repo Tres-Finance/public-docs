@@ -67,3 +67,6 @@ jobs:
           gh pr merge "$PR_URL" --auto --squash
         env:
           GH_TOKEN: ${{ secrets.SYNC_GITHUB_TOKEN }}
+          # Pin all gh pr operations to THIS repo. On a fork, gh pr create
+          # otherwise defaults the base to the upstream parent.
+          GH_REPO: ${{ github.repository }}
