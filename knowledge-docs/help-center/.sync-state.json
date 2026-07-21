@@ -1,0 +1,377 @@
+{
+  "articles": {
+    "1099-form-generation": {
+      "lastmod": "2026-04-21T13:57:51.862Z",
+      "url": "https://help.tres.finance/article/1099-form-generation"
+    },
+    "accounting-methodologies-in-tres-finance": {
+      "lastmod": "2026-02-15T13:34:55.518Z",
+      "url": "https://help.tres.finance/article/accounting-methodologies-in-tres-finance"
+    },
+    "accounting-workflow-internal-transfers": {
+      "lastmod": "2026-02-17T20:24:59.262Z",
+      "url": "https://help.tres.finance/article/accounting-workflow-internal-transfers"
+    },
+    "accounts": {
+      "lastmod": "2025-12-07T08:16:11.429Z",
+      "url": "https://help.tres.finance/article/accounts"
+    },
+    "add-new-on-chain-wallet": {
+      "lastmod": "2026-07-17T18:01:42.474Z",
+      "url": "https://help.tres.finance/article/add-new-on-chain-wallet"
+    },
+    "alerts": {
+      "lastmod": "2025-11-25T10:55:25.137Z",
+      "url": "https://help.tres.finance/article/alerts"
+    },
+    "api-based-historical-balance-report": {
+      "lastmod": "2026-01-15T14:27:59.182Z",
+      "url": "https://help.tres.finance/article/api-based-historical-balance-report"
+    },
+    "api-based-interaction-with-tres-proof-of-funds-service": {
+      "lastmod": "2026-01-18T08:42:47.935Z",
+      "url": "https://help.tres.finance/article/api-based-interaction-with-tres-proof-of-funds-service"
+    },
+    "api-based-login": {
+      "lastmod": "2026-05-11T18:59:03.876Z",
+      "url": "https://help.tres.finance/article/api-based-login"
+    },
+    "api-based-stateless-transaction": {
+      "lastmod": "2026-05-13T18:13:25.880Z",
+      "url": "https://help.tres.finance/article/api-based-stateless-transaction"
+    },
+    "api-based-transactions-collection-for-a-specific-period": {
+      "lastmod": "2025-07-08T17:59:21.207Z",
+      "url": "https://help.tres.finance/article/api-based-transactions-collection-for-a-specific-period"
+    },
+    "asset-allowances": {
+      "lastmod": "2026-07-09T14:32:07.605Z",
+      "url": "https://help.tres.finance/article/asset-allowances"
+    },
+    "asset-balance-report-field-descriptions": {
+      "lastmod": "2026-04-21T13:57:51.734Z",
+      "url": "https://help.tres.finance/article/asset-balance-report-field-descriptions"
+    },
+    "asset-balances-archives-report-guide": {
+      "lastmod": "2026-04-23T08:01:15.789Z",
+      "url": "https://help.tres.finance/article/asset-balances-archives-report-guide"
+    },
+    "asset-balances-report-guide": {
+      "lastmod": "2026-04-23T08:01:09.450Z",
+      "url": "https://help.tres.finance/article/asset-balances-report-guide"
+    },
+    "asset-balances-v2-report-guide": {
+      "lastmod": "2026-04-20T20:12:40.435Z",
+      "url": "https://help.tres.finance/article/asset-balances-v2-report-guide"
+    },
+    "asset-fiat-values-report-guide": {
+      "lastmod": "2026-04-20T18:36:49.830Z",
+      "url": "https://help.tres.finance/article/asset-fiat-values-report-guide"
+    },
+    "asset-roll-forward-report-guide": {
+      "lastmod": "2026-04-20T20:06:52.150Z",
+      "url": "https://help.tres.finance/article/asset-roll-forward-report-guide"
+    },
+    "assets": {
+      "lastmod": "2026-01-18T08:45:08.877Z",
+      "url": "https://help.tres.finance/article/assets"
+    },
+    "auto-fill-reconciliation-gaps": {
+      "lastmod": "2026-01-05T14:40:24.901Z",
+      "url": "https://help.tres.finance/article/auto-fill-reconciliation-gaps"
+    },
+    "automations": {
+      "lastmod": "2026-04-21T13:57:51.881Z",
+      "url": "https://help.tres.finance/article/automations"
+    },
+    "balance-difference-method": {
+      "lastmod": "2025-07-13T08:25:05.111Z",
+      "url": "https://help.tres.finance/article/balance-difference-method"
+    },
+    "balance-trends-report-guide": {
+      "lastmod": "2026-04-20T19:07:11.008Z",
+      "url": "https://help.tres.finance/article/balance-trends-report-guide"
+    },
+    "blockchain-data-validation": {
+      "lastmod": "2026-01-18T08:33:04.160Z",
+      "url": "https://help.tres.finance/article/blockchain-data-validation"
+    },
+    "bulk-transactions-upload-via-csv": {
+      "lastmod": "2025-11-13T09:09:01.731Z",
+      "url": "https://help.tres.finance/article/bulk-transactions-upload-via-csv"
+    },
+    "calculating-the-fiat-value-of-blockchain-assets": {
+      "lastmod": "2026-01-15T14:31:29.929Z",
+      "url": "https://help.tres.finance/article/calculating-the-fiat-value-of-blockchain-assets"
+    },
+    "calculating-the-historical-balance-of-blockchain-tokens-de-fi-and-ce-fi": {
+      "lastmod": "2026-01-18T08:41:39.855Z",
+      "url": "https://help.tres.finance/article/calculating-the-historical-balance-of-blockchain-tokens-de-fi-and-ce-fi"
+    },
+    "closing-the-books": {
+      "lastmod": "2025-12-10T15:37:28.810Z",
+      "url": "https://help.tres.finance/article/closing-the-books"
+    },
+    "closing-the-books-with-tres": {
+      "lastmod": "2026-05-18T13:04:26.914Z",
+      "url": "https://help.tres.finance/article/closing-the-books-with-tres"
+    },
+    "connecting-with-binance-master-and-sub-account": {
+      "lastmod": "2026-04-21T13:57:51.438Z",
+      "url": "https://help.tres.finance/article/connecting-with-binance-master-and-sub-account"
+    },
+    "cost-basis-inventory-report-guide": {
+      "lastmod": "2026-04-20T19:12:18.461Z",
+      "url": "https://help.tres.finance/article/cost-basis-inventory-report-guide"
+    },
+    "cost-basis-roll-forward-report-guide": {
+      "lastmod": "2026-04-20T20:06:09.404Z",
+      "url": "https://help.tres.finance/article/cost-basis-roll-forward-report-guide"
+    },
+    "cost-basis-stack-report-guide": {
+      "lastmod": "2026-04-20T20:05:46.345Z",
+      "url": "https://help.tres.finance/article/cost-basis-stack-report-guide"
+    },
+    "cost-breakdown-report-guide": {
+      "lastmod": "2026-04-20T18:52:43.757Z",
+      "url": "https://help.tres.finance/article/cost-breakdown-report-guide"
+    },
+    "create-a-manual-wallet": {
+      "lastmod": "2026-04-21T13:57:51.460Z",
+      "url": "https://help.tres.finance/article/create-a-manual-wallet"
+    },
+    "custodian-integration-overview": {
+      "lastmod": "2026-05-04T12:56:51.028Z",
+      "url": "https://help.tres.finance/article/custodian-integration-overview"
+    },
+    "december": {
+      "lastmod": "2026-02-02T14:15:31.529Z",
+      "url": "https://help.tres.finance/article/december"
+    },
+    "define-custom-rules-to-automate-transaction-classification": {
+      "lastmod": "2025-07-13T08:40:17.484Z",
+      "url": "https://help.tres.finance/article/define-custom-rules-to-automate-transaction-classification"
+    },
+    "erp-integrations": {
+      "lastmod": "2026-01-18T08:46:33.920Z",
+      "url": "https://help.tres.finance/article/erp-integrations"
+    },
+    "erp-post-sync-report-guide": {
+      "lastmod": "2026-04-20T20:10:32.477Z",
+      "url": "https://help.tres.finance/article/erp-post-sync-report-guide"
+    },
+    "erp-pre-sync-report-guide": {
+      "lastmod": "2026-04-20T20:09:53.610Z",
+      "url": "https://help.tres.finance/article/erp-pre-sync-report-guide"
+    },
+    "february": {
+      "lastmod": "2026-02-16T12:17:27.264Z",
+      "url": "https://help.tres.finance/article/february"
+    },
+    "frameworks": {
+      "lastmod": "2026-04-21T13:57:51.840Z",
+      "url": "https://help.tres.finance/article/frameworks"
+    },
+    "get-on-board": {
+      "lastmod": "2025-12-17T10:08:57.520Z",
+      "url": "https://help.tres.finance/article/get-on-board"
+    },
+    "graph-ql-api-explorer": {
+      "lastmod": "2026-05-17T14:22:34.637Z",
+      "url": "https://help.tres.finance/article/graph-ql-api-explorer"
+    },
+    "how-to-add-a-new-custodian": {
+      "lastmod": "2026-03-13T13:37:23.450Z",
+      "url": "https://help.tres.finance/article/how-to-add-a-new-custodian"
+    },
+    "how-to-resolve-missing-fiat-value-errors": {
+      "lastmod": "2026-05-28T13:39:15.272Z",
+      "url": "https://help.tres.finance/article/how-to-resolve-missing-fiat-value-errors"
+    },
+    "how-to-unsync-an-entry-to-xero": {
+      "lastmod": "2025-12-14T11:40:39.377Z",
+      "url": "https://help.tres.finance/article/how-to-unsync-an-entry-to-xero"
+    },
+    "integrate-bit-go-with-tres-finance": {
+      "lastmod": "2026-07-09T12:42:12.650Z",
+      "url": "https://help.tres.finance/article/integrate-bit-go-with-tres-finance"
+    },
+    "integrate-fireblocks-with-tres-finance": {
+      "lastmod": "2026-04-21T13:57:51.490Z",
+      "url": "https://help.tres.finance/article/integrate-fireblocks-with-tres-finance"
+    },
+    "integrating-your-exchange-accounts-with-tres-finance": {
+      "lastmod": "2026-06-29T11:29:25.006Z",
+      "url": "https://help.tres.finance/article/integrating-your-exchange-accounts-with-tres-finance"
+    },
+    "integrations": {
+      "lastmod": "2026-04-21T13:57:51.801Z",
+      "url": "https://help.tres.finance/article/integrations"
+    },
+    "january": {
+      "lastmod": "2026-02-02T14:15:19.037Z",
+      "url": "https://help.tres.finance/article/january"
+    },
+    "ledger": {
+      "lastmod": "2026-06-02T10:57:13.920Z",
+      "url": "https://help.tres.finance/article/ledger"
+    },
+    "ledger-reconciliation-report-guide": {
+      "lastmod": "2026-04-20T20:08:29.292Z",
+      "url": "https://help.tres.finance/article/ledger-reconciliation-report-guide"
+    },
+    "march": {
+      "lastmod": "2026-04-06T09:15:21.898Z",
+      "url": "https://help.tres.finance/article/march"
+    },
+    "negative-cost-basis-inventory": {
+      "lastmod": "2026-04-21T13:57:51.644Z",
+      "url": "https://help.tres.finance/article/negative-cost-basis-inventory"
+    },
+    "netsuite-integration-setup": {
+      "lastmod": "2025-07-13T08:37:39.299Z",
+      "url": "https://help.tres.finance/article/netsuite-integration-setup"
+    },
+    "november": {
+      "lastmod": "2026-02-02T14:15:35.658Z",
+      "url": "https://help.tres.finance/article/november"
+    },
+    "october": {
+      "lastmod": "2026-02-04T20:34:27.727Z",
+      "url": "https://help.tres.finance/article/october"
+    },
+    "organization-wallets-report-guide": {
+      "lastmod": "2026-04-20T18:34:56.883Z",
+      "url": "https://help.tres.finance/article/organization-wallets-report-guide"
+    },
+    "overview-screen": {
+      "lastmod": "2026-04-21T13:57:51.675Z",
+      "url": "https://help.tres.finance/article/overview-screen"
+    },
+    "perform-a-basic-setup": {
+      "lastmod": "2026-05-06T10:53:00.925Z",
+      "url": "https://help.tres.finance/article/perform-a-basic-setup"
+    },
+    "positions": {
+      "lastmod": "2025-11-19T09:43:48.495Z",
+      "url": "https://help.tres.finance/article/positions"
+    },
+    "realized-gains-losses-report-guide": {
+      "lastmod": "2026-04-20T18:59:44.247Z",
+      "url": "https://help.tres.finance/article/realized-gains-losses-report-guide"
+    },
+    "reconciliation-in-tres": {
+      "lastmod": "2026-01-18T08:35:13.957Z",
+      "url": "https://help.tres.finance/article/reconciliation-in-tres"
+    },
+    "reports": {
+      "lastmod": "2026-04-21T13:57:51.718Z",
+      "url": "https://help.tres.finance/article/reports"
+    },
+    "revaluation-cost-basis-in-tres-finance": {
+      "lastmod": "2026-06-24T16:36:20.077Z",
+      "url": "https://help.tres.finance/article/revaluation-cost-basis-in-tres-finance"
+    },
+    "revaluation-report-guide": {
+      "lastmod": "2026-04-20T20:00:59.158Z",
+      "url": "https://help.tres.finance/article/revaluation-report-guide"
+    },
+    "risks": {
+      "lastmod": "2026-06-28T09:14:29.789Z",
+      "url": "https://help.tres.finance/article/risks"
+    },
+    "rollup-breakdown-report-guide": {
+      "lastmod": "2026-04-20T18:54:08.240Z",
+      "url": "https://help.tres.finance/article/rollup-breakdown-report-guide"
+    },
+    "rollups-in-tres-finance": {
+      "lastmod": "2026-06-22T03:38:42.241Z",
+      "url": "https://help.tres.finance/article/rollups-in-tres-finance"
+    },
+    "saved-filters": {
+      "lastmod": "2026-04-21T13:57:51.620Z",
+      "url": "https://help.tres.finance/article/saved-filters"
+    },
+    "set-up-tres-for-accounting": {
+      "lastmod": "2026-05-28T15:56:14.751Z",
+      "url": "https://help.tres.finance/article/set-up-tres-for-accounting"
+    },
+    "setting-sub-transactions-as-non-taxable": {
+      "lastmod": "2026-02-05T19:33:57.841Z",
+      "url": "https://help.tres.finance/article/setting-sub-transactions-as-non-taxable"
+    },
+    "setting-up-xero-at-tres": {
+      "lastmod": "2025-12-11T10:59:45.172Z",
+      "url": "https://help.tres.finance/article/setting-up-xero-at-tres"
+    },
+    "setup-okta-login": {
+      "lastmod": "2025-07-08T17:54:39.398Z",
+      "url": "https://help.tres.finance/article/setup-okta-login"
+    },
+    "skills-and-use-cases": {
+      "lastmod": "2026-05-04T09:32:48.187Z",
+      "url": "https://help.tres.finance/article/skills-and-use-cases"
+    },
+    "sub-system-reconciliation": {
+      "lastmod": "2026-05-16T17:37:28.862Z",
+      "url": "https://help.tres.finance/article/sub-system-reconciliation"
+    },
+    "sub-tx-actions": {
+      "lastmod": "2026-01-18T08:44:21.460Z",
+      "url": "https://help.tres.finance/article/sub-tx-actions"
+    },
+    "sync-transactions": {
+      "lastmod": "2026-05-28T16:59:23.484Z",
+      "url": "https://help.tres.finance/article/sync-transactions"
+    },
+    "sync-your-ledger-entries-from-tres-to-xero": {
+      "lastmod": "2026-04-21T13:57:51.545Z",
+      "url": "https://help.tres.finance/article/sync-your-ledger-entries-from-tres-to-xero"
+    },
+    "tags-groups": {
+      "lastmod": "2025-12-10T11:28:36.471Z",
+      "url": "https://help.tres.finance/article/tags-groups"
+    },
+    "terminology": {
+      "lastmod": "2026-05-16T17:37:46.706Z",
+      "url": "https://help.tres.finance/article/terminology"
+    },
+    "transaction-actions": {
+      "lastmod": "2026-01-18T08:43:58.635Z",
+      "url": "https://help.tres.finance/article/transaction-actions"
+    },
+    "transaction-ledger-report-guide": {
+      "lastmod": "2026-04-20T18:32:45.210Z",
+      "url": "https://help.tres.finance/article/transaction-ledger-report-guide"
+    },
+    "tres-claude-plugin-user-guide": {
+      "lastmod": "2026-05-04T09:32:24.885Z",
+      "url": "https://help.tres.finance/article/tres-claude-plugin-user-guide"
+    },
+    "tres-invoicing": {
+      "lastmod": "2026-04-21T13:57:51.820Z",
+      "url": "https://help.tres.finance/article/tres-invoicing"
+    },
+    "tres-mcp-fa-qs": {
+      "lastmod": "2026-05-14T15:32:11.499Z",
+      "url": "https://help.tres.finance/article/tres-mcp-fa-qs"
+    },
+    "tres-quickbooks-xero-ap-ar-guide": {
+      "lastmod": "2025-07-13T08:13:16.290Z",
+      "url": "https://help.tres.finance/article/tres-quickbooks-xero-ap-ar-guide"
+    },
+    "trial-balances": {
+      "lastmod": "2026-01-25T15:13:46.361Z",
+      "url": "https://help.tres.finance/article/trial-balances"
+    },
+    "upload-manual-transactions": {
+      "lastmod": "2025-07-13T06:45:33.631Z",
+      "url": "https://help.tres.finance/article/upload-manual-transactions"
+    },
+    "user-management-page-user-roles": {
+      "lastmod": "2025-07-13T06:47:24.842Z",
+      "url": "https://help.tres.finance/article/user-management-page-user-roles"
+    }
+  },
+  "generated_at": "2026-07-21T19:25:23.296110+00:00"
+}

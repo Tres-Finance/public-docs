@@ -1,0 +1,49 @@
+name: knowledge-docs-checks
+
+on:
+  # Runs on EVERY PR (no path filter) so the required `checks` status is
+  # always reported — a path-filtered required check would never run on a
+  # non-knowledge-docs PR, blocking it from merging forever. The job below
+  # already scopes its scan to knowledge-docs/ changes and passes cleanly
+  # (empty scan) when a PR touches nothing under knowledge-docs/.
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    # GitHub-hosted (not self-hosted): this is a pull_request workflow on a
+    # PUBLIC repo, so running it on Tres self-hosted runners would let a fork
+    # PR execute untrusted code on internal infra. It only reads public repo
+    # content + runs a local scan (no authenticated org write), so the org IP
+    # allow list does not block it. VERIFY on the canonical repo that this runs
+    # green; if the allow list blocks GitHub-hosted checkout, coordinate a
+    # self-hosted option WITH fork-PR approval controls before switching.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.11"
+
+      - name: Collect changed files under knowledge-docs/
+        id: diff
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          CHANGED="$(git diff --name-only "$BASE" "$HEAD" -- 'knowledge-docs/**')"
+          echo "$CHANGED"
+          printf '%s\n' "$CHANGED" > /tmp/changed.txt
+
+      - name: Secret/PII scan + md-only gate
+        run: |
+          set -euo pipefail
+          mapfile -t FILES < /tmp/changed.txt
+          # drop empty lines
+          FILTERED=()
+          for f in "${FILES[@]}"; do [ -n "$f" ] && FILTERED+=("$f"); done
+          python3 scripts/ci_checks.py --changed "${FILTERED[@]}"
