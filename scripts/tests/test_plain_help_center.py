@@ -66,3 +66,28 @@ def test_article_filename():
 def test_render_article_prepends_source_and_normalizes_trailing_ws():
     out = render_article("https://help.tres.finance/article/a", "# Title\n\nBody\n\n\n")
     assert out == "Source: https://help.tres.finance/article/a\n\n# Title\n\nBody\n"
+
+
+import json as _json
+from scripts.plain_help_center import SyncResult, sync
+
+
+def test_sync_writes_deletes_and_rewrites_anchor(tmp_path):
+    content = tmp_path / "help-center"
+    content.mkdir()
+    # Pre-existing file for a slug that will be deleted.
+    (content / "article-old.md").write_text("Source: x\n\nstale\n", encoding="utf-8")
+    anchor_path = tmp_path / ".sync-state.json"
+    anchor = {"old": {"url": "https://help.tres.finance/article/old", "lastmod": "1"}}
+
+    articles = [Article("a", "https://help.tres.finance/article/a", "2026-01-01T00:00:00Z")]
+    fetched = {"https://help.tres.finance/article/a.md": "# A\n\nbody\n"}
+    result = sync(str(content), str(anchor_path), articles, anchor,
+                  fetch=lambda u, timeout=30: fetched[u], now="2026-07-21T00:00:00Z")
+
+    assert result == SyncResult(added=["a"], changed=[], deleted=["old"])
+    assert (content / "article-a.md").read_text(encoding="utf-8") == \
+        "Source: https://help.tres.finance/article/a\n\n# A\n\nbody\n"
+    assert not (content / "article-old.md").exists()
+    saved = _json.loads(anchor_path.read_text(encoding="utf-8"))
+    assert list(saved["articles"].keys()) == ["a"]

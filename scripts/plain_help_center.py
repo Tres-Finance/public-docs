@@ -87,3 +87,37 @@ def fetch_text(url: str, timeout: int = 30) -> str:
         if resp.status != 200:
             raise RuntimeError(f"GET {url} returned {resp.status}")
         return resp.read().decode("utf-8")
+
+
+from datetime import datetime, timezone
+
+
+@dataclass(frozen=True)
+class SyncResult:
+    added: list[str]
+    changed: list[str]
+    deleted: list[str]
+
+
+def sync(content_dir, anchor_path, articles, anchor, fetch=fetch_text, now="") -> SyncResult:
+    now = now or datetime.now(tz=timezone.utc).isoformat()
+    plan = diff_sitemap(articles, anchor)
+
+    added, changed = [], []
+    for article in plan.to_fetch:
+        native = fetch(f"{article.url}.md", timeout=30)
+        path = os.path.join(content_dir, article_filename(article.slug))
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(render_article(article.url, native))
+        (changed if article.slug in anchor else added).append(article.slug)
+
+    for slug in plan.to_delete:
+        path = os.path.join(content_dir, article_filename(slug))
+        if os.path.exists(path):
+            os.remove(path)
+
+    with open(anchor_path, "w", encoding="utf-8") as f:
+        json.dump(anchor_payload(articles, now), f, indent=2, sort_keys=True)
+        f.write("\n")
+
+    return SyncResult(added=sorted(added), changed=sorted(changed), deleted=sorted(plan.to_delete))
