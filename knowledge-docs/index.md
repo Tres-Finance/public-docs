@@ -1,8 +1,8 @@
 # Tres Finance Knowledge Docs
 
 > LLM-navigable knowledge corpus for the Tres Finance platform. This is the
-> master index (llms.txt format); per-source indices sit beside this file in
-> indices/, and every linked article is a markdown file in this directory tree.
+> index of every article in this directory tree (public content only —
+> customer Q&A lives in the private internal-docs repo).
 
 ## product-docs
 
