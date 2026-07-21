@@ -1,3 +1,5 @@
+import json
+import os
 import re
 from dataclasses import dataclass
 
@@ -33,3 +35,36 @@ def parse_sitemap(xml_text: str) -> list["Article"]:
         lastmod = lastmod_match.group(1).strip() if lastmod_match else ""
         articles.append(Article(slug=slug, url=url, lastmod=lastmod))
     return sorted(articles, key=lambda a: a.slug)
+
+
+@dataclass(frozen=True)
+class SyncPlan:
+    to_fetch: list[Article]
+    to_delete: list[str]
+
+
+def load_anchor(path: str) -> dict[str, dict]:
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f).get("articles", {})
+
+
+def diff_sitemap(articles: list[Article], anchor: dict[str, dict]) -> SyncPlan:
+    current = {a.slug: a for a in articles}
+    to_fetch = [
+        a for a in articles
+        if a.slug not in anchor or anchor[a.slug].get("lastmod") != a.lastmod
+    ]
+    to_delete = sorted(slug for slug in anchor if slug not in current)
+    return SyncPlan(to_fetch=to_fetch, to_delete=to_delete)
+
+
+def anchor_payload(articles: list[Article], generated_at: str) -> dict:
+    return {
+        "generated_at": generated_at,
+        "articles": {
+            a.slug: {"url": a.url, "lastmod": a.lastmod}
+            for a in sorted(articles, key=lambda a: a.slug)
+        },
+    }
