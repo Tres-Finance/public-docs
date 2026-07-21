@@ -1,0 +1,62 @@
+name: Sync help-center
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-help-center
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch articles, update anchor, refresh index bullets
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -euo pipefail
+          RESULT="$(python3 scripts/plain_help_center.py)"
+          echo "$RESULT"
+          RESULT="$RESULT" python3 - <<'PY'
+          import os, json
+          from scripts.update_index import apply_to_index_file
+          result = json.loads(os.environ["RESULT"])
+          changed = sorted(set(result["added"]) | set(result["changed"]))
+          apply_to_index_file("knowledge-docs/index.md", "knowledge-docs/help-center", changed)
+          PY
+
+      - name: Open or update PR
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes — nothing to sync."
+            exit 0
+          fi
+          BRANCH="sync/help-center-$(date -u +%Y%m%d)"
+          git config user.name  "tres-help-center-sync[bot]"
+          git config user.email "tres-help-center-sync@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add knowledge-docs/
+          git commit -m "chore(help-center): scheduled corpus sync"
+          git push --force-with-lease origin "$BRANCH"
+          PR_URL="$(gh pr list --head "$BRANCH" --json url --jq '.[0].url')"
+          if [ -z "$PR_URL" ]; then
+            PR_URL="$(gh pr create --base main --head "$BRANCH" \
+              --title "chore(help-center): scheduled corpus sync" \
+              --body "Automated help-center sync. Merges automatically once knowledge-docs-checks passes.")"
+          fi
+          gh pr merge "$PR_URL" --auto --squash
+        env:
+          GH_TOKEN: ${{ github.token }}
