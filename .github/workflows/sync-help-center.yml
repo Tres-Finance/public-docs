@@ -15,11 +15,11 @@ concurrency:
 
 jobs:
   sync:
-    # Tres self-hosted runner: Tres-Finance has an org IP allow list, so the
-    # PAT-authenticated PR/auto-merge calls must originate from an allow-listed
-    # IP. Only maintainers trigger this (schedule/dispatch), so there is no
-    # untrusted-fork-PR code-execution risk from using a self-hosted runner.
-    runs-on: default-runners-ubuntu22.04-arm64
+    # GitHub-hosted runner: self-hosted runners are disallowed on this public
+    # repo (an untrusted fork PR could execute code on internal infra). The
+    # PAT push/PR/auto-merge calls must therefore be reachable from
+    # GitHub-hosted IPs under the org IP allow list.
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
