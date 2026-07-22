@@ -45,7 +45,14 @@ jobs:
           from scripts.update_index import apply_to_index_file
           result = json.loads(os.environ["RESULT"])
           changed = sorted(set(result["added"]) | set(result["changed"]))
-          apply_to_index_file("knowledge-docs/index.md", "knowledge-docs/help-center", changed)
+          # Only touch the index when articles were actually added/changed/removed.
+          # apply_to_index_file rebuilds the whole ## help-center section (sorted),
+          # so calling it on a no-op run would re-sort/normalize existing bullets
+          # and churn a spurious index-only PR.
+          if changed or result["deleted"]:
+              apply_to_index_file("knowledge-docs/index.md", "knowledge-docs/help-center", changed)
+          else:
+              print("no article changes; index left untouched")
           PY
 
       - name: Open or update PR
