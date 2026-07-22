@@ -56,10 +56,12 @@ jobs:
           PY
 
       - name: Open or update PR
+        id: pr
         run: |
           set -euo pipefail
           if [ -z "$(git status --porcelain -- knowledge-docs/)" ]; then
             echo "No changes — nothing to sync."
+            echo "outcome=noop" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           BRANCH="sync/help-center-$(date -u +%Y%m%d)"
@@ -80,15 +82,61 @@ jobs:
           # options, which can hit the parent org's IP allow list. REST scoped to
           # THIS repo never touches the parent, and works identically on the
           # canonical (non-fork) repo.
-          PR_NODE="$(gh api "repos/$GITHUB_REPOSITORY/pulls?head=$OWNER:$BRANCH&base=main&state=open" --jq '.[0].node_id // empty')"
+          EXISTING="$(gh api "repos/$GITHUB_REPOSITORY/pulls?head=$OWNER:$BRANCH&base=main&state=open")"
+          PR_NODE="$(printf '%s' "$EXISTING" | jq -r '.[0].node_id // empty')"
+          PR_URL="$(printf '%s' "$EXISTING" | jq -r '.[0].html_url // empty')"
+          PR_NUM="$(printf '%s' "$EXISTING" | jq -r '.[0].number // empty')"
           if [ -z "$PR_NODE" ]; then
-            PR_NODE="$(gh api -X POST "repos/$GITHUB_REPOSITORY/pulls" \
+            CREATED="$(gh api -X POST "repos/$GITHUB_REPOSITORY/pulls" \
               -f title="chore(help-center): scheduled corpus sync" \
               -f head="$BRANCH" -f base="main" \
-              -f body="Automated help-center sync. Merges automatically once the knowledge-docs checks pass." \
-              --jq '.node_id')"
+              -f body="Automated help-center sync. Merges automatically once the knowledge-docs checks pass.")"
+            PR_NODE="$(printf '%s' "$CREATED" | jq -r '.node_id')"
+            PR_URL="$(printf '%s' "$CREATED" | jq -r '.html_url')"
+            PR_NUM="$(printf '%s' "$CREATED" | jq -r '.number')"
           fi
+          # Record the PR before enabling auto-merge, so the Slack step reports it
+          # even if enabling auto-merge fails (e.g. a still-pending required check).
+          {
+            echo "outcome=pr"
+            echo "pr_url=$PR_URL"
+            echo "pr_number=$PR_NUM"
+          } >> "$GITHUB_OUTPUT"
           gh api graphql -f query='mutation($id:ID!){enablePullRequestAutoMerge(input:{pullRequestId:$id,mergeMethod:SQUASH}){pullRequest{number}}}' -F id="$PR_NODE"
         env:
           GH_TOKEN: ${{ secrets.PAT_FOR_TOKEN_PUBLIC_DOCS_GITHUB_ACTIONS_PR }}
           GH_REPO: ${{ github.repository }}
+
+      - name: Notify Slack
+        # Post the run result to the same channel the dashboard/internal-docs
+        # wiki flow uses (the SLACK_WEBHOOK incoming webhook — the channel is
+        # configured Slack-side). Plain curl + jq, no third-party action, per
+        # the org policy. Runs regardless of outcome.
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          OUTCOME: ${{ steps.pr.outputs.outcome }}
+          PR_URL: ${{ steps.pr.outputs.pr_url }}
+          PR_NUMBER: ${{ steps.pr.outputs.pr_number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SLACK_WEBHOOK:-}" ]; then
+            echo "::warning::SLACK_WEBHOOK not set — skipping Slack notification."
+            exit 0
+          fi
+          case "${OUTCOME:-}" in
+            noop)
+              TEXT="✅ *help-center sync* ran — no changes (no-op). <$RUN_URL|View run>"
+              ;;
+            pr)
+              TEXT="🔀 *help-center sync* opened a PR: <$PR_URL|#$PR_NUMBER>. <$RUN_URL|View run>"
+              ;;
+            *)
+              TEXT="❌ *help-center sync* failed. <$RUN_URL|View run>"
+              ;;
+          esac
+          PAYLOAD="$(jq -n --arg text "$TEXT" \
+            '{text: $text, blocks: [{type: "section", text: {type: "mrkdwn", text: $text}}]}')"
+          curl -fsSL -X POST -H 'Content-Type: application/json' --data "$PAYLOAD" "$SLACK_WEBHOOK"
+          echo "Slack notified: ${OUTCOME:-failure}"
