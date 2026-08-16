@@ -82,12 +82,15 @@ const STAKING_DATA_QUERY = `
         byValidator {
           start
           end
-          claimable
+          startClaimable
           generatedRewards
-          locked
+          startLocked
+          startUnlocking
+          endLocked
+          endClaimable
+          endUnlocking
           apr
           yieldType
-          unlocking
           validatorIdentifier
           stakingLedger {
             timestamp
@@ -185,11 +188,14 @@ function flattenStakingData(results) {
         end: "",
         totalCount: "",
         validatorIdentifier: "",
-        claimable: "",
+        startClaimable: "",
         generatedRewards: "",
-        locked: "",
+        startLocked: "",
         apr: "",
-        unlocking: "",
+        startUnlocking: "",
+        endLocked: "",
+        endClaimable: "",
+        endUnlocking: "",
         ledgerTimestamp: "",
         ledgerType: "",
         ledgerAmount: "",
@@ -224,11 +230,14 @@ function flattenStakingData(results) {
           end: validator.end,
           totalCount: sd.totalCount,
           validatorIdentifier: validator.validatorIdentifier,
-          claimable: validator.claimable,
+          startClaimable: validator.startClaimable,
           generatedRewards: validator.generatedRewards,
-          locked: validator.locked,
+          startLocked: validator.startLocked,
           apr: validator.apr,
-          unlocking: validator.unlocking,
+          startUnlocking: validator.startUnlocking,
+          endLocked: validator.endLocked,
+          endClaimable: validator.endClaimable,
+          endUnlocking: validator.endUnlocking,
           ledgerTimestamp: "",
           ledgerType: "",
           ledgerAmount: "",
@@ -256,11 +265,14 @@ function flattenStakingData(results) {
           end: validator.end,
           totalCount: sd.totalCount,
           validatorIdentifier: validator.validatorIdentifier,
-          claimable: validator.claimable,
+          startClaimable: validator.startClaimable,
           generatedRewards: validator.generatedRewards,
-          locked: validator.locked,
+          startLocked: validator.startLocked,
           apr: validator.apr,
-          unlocking: validator.unlocking,
+          startUnlocking: validator.startUnlocking,
+          endLocked: validator.endLocked,
+          endClaimable: validator.endClaimable,
+          endUnlocking: validator.endUnlocking,
           ledgerTimestamp: entry.timestamp,
           ledgerType: entry.type,
           ledgerAmount: entry.amount,
